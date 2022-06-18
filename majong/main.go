@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"reflect"
 )
 
 var tileDefinitions = []string{
@@ -130,6 +131,27 @@ func NewTiles(raw string) ([]*Tile, error) {
 	return tiles, nil
 }
 
+func (t *Tile) getType() (string, error) {
+	for _, name := range []string{"C", "H", "R", "E", "W", "N", "S"} {
+		if name == t.name {
+			return "honor", nil
+		}
+	}
+
+	typeString := t.name[1:]
+
+	switch typeString {
+	case "m":
+		return "manzu", nil
+	case "s":
+		return "souzu", nil
+	case "p":
+		return "pinzu", nil
+	default:
+		return "", errors.New("不正なtypeです")
+	}
+}
+
 func main() {
 	flag.Parse()
 	if len(flag.Args()) == 0 {
@@ -141,10 +163,20 @@ func main() {
 	var err error
 	tiles, err = NewTiles(flag.Args()[0])
 
-	fmt.Println(tiles)
-	fmt.Println("手牌だよ")
-	fmt.Println(err)
-	fmt.Println(tiles[0])
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	tileType, err := tiles[0].getType()
+
+	fmt.Println(tileType)
+	fmt.Println("tileType")
+	fmt.Println(tiles[0].name)
+	tiles[0].name = "newname"
+
+	fmt.Println(tiles[0].name)
+	fmt.Println(reflect.TypeOf(tiles[0]))
 
 	// fmt.Println(tiles)
 	// struct Hai {
