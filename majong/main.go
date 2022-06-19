@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"example/hello/majong/test"
 	"flag"
 	"fmt"
 	"reflect"
@@ -153,6 +154,11 @@ func (t *Tile) getType() (string, error) {
 }
 
 func main() {
+	a, _ := test.NewOtherModel()
+	fmt.Println(a)
+	name := a.GetName()
+	a.name = "hjo"
+	fmt.Println(name)
 	flag.Parse()
 	if len(flag.Args()) == 0 {
 		fmt.Println("引数を指定してください.")
