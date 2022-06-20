@@ -155,10 +155,24 @@ func (t *Tile) getType() (string, error) {
 
 func main() {
 	a, _ := test.NewOtherModel()
+	b := test.OtherModel{
+		OpenName: "kkk",
+	}
+
+	fmt.Println(b)
 	fmt.Println(a)
 	name := a.GetName()
-	a.name = "hjo"
+	openName := a.OpenName
+	// a.name = "hjo"
 	fmt.Println(name)
+	fmt.Println("openname", openName)
+	fmt.Println(&a)
+	a.SetName("afterchange")
+	fmt.Println("----------afterOtherModel", a)
+	a.OpenName = "afterOpennameだよ"
+	fmt.Println("aftername", a.GetName())
+	fmt.Println(a.OpenName)
+
 	flag.Parse()
 	if len(flag.Args()) == 0 {
 		fmt.Println("引数を指定してください.")
