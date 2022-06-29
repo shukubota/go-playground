@@ -8,8 +8,8 @@ type OtherModel struct {
 	OpenName string
 }
 
-func NewOtherModel() (*OtherModel, error) {
-	newModel := &OtherModel{
+func NewOtherModel() (OtherModel, error) {
+	newModel := OtherModel{
 		id:       1,
 		name:     "hoge",
 		OpenName: "openname",
