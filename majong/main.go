@@ -2,10 +2,8 @@ package main
 
 import (
 	"errors"
-	"example/hello/majong/test"
 	"flag"
 	"fmt"
-	"reflect"
 )
 
 var tileDefinitions = []string{
@@ -64,7 +62,8 @@ func NewTiles(raw string) ([]*Tile, error) {
 		for _, item := range []string{"C", "H", "R", "E", "W", "N", "S"} {
 			if targetCharacters[:1] == item {
 				newTile = &Tile{
-					name: item,
+					name:     item,
+					tileType: "honours",
 				}
 				break
 			}
@@ -84,7 +83,8 @@ func NewTiles(raw string) ([]*Tile, error) {
 		for _, item := range []string{"1m", "2m", "3m", "4m", "5m", "6m", "7m", "8m", "9m"} {
 			if targetCharacters[:2] == item {
 				newTile = &Tile{
-					name: item,
+					name:     item,
+					tileType: "character",
 				}
 				break
 			}
@@ -99,7 +99,8 @@ func NewTiles(raw string) ([]*Tile, error) {
 		for _, item := range []string{"1p", "2p", "3p", "4p", "5p", "6p", "7p", "8p", "9p"} {
 			if targetCharacters[:2] == item {
 				newTile = &Tile{
-					name: item,
+					name:     item,
+					tileType: "circle",
 				}
 				break
 			}
@@ -114,7 +115,8 @@ func NewTiles(raw string) ([]*Tile, error) {
 		for _, item := range []string{"1s", "2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s"} {
 			if targetCharacters[:2] == item {
 				newTile = &Tile{
-					name: item,
+					name:     item,
+					tileType: "bamboo",
 				}
 				break
 			}
@@ -127,6 +129,10 @@ func NewTiles(raw string) ([]*Tile, error) {
 
 		// どれにも当てはまらなかったらその時点でerror
 		return nil, errors.New("指定された文字列が不正です" + targetCharacters[0:1])
+	}
+
+	if len(targetCharacters) > 0 {
+		return nil, errors.New("指定された文字列が長すぎます")
 	}
 
 	return tiles, nil
@@ -154,31 +160,11 @@ func (t *Tile) getType() (string, error) {
 }
 
 func main() {
-	a, _ := test.NewOtherModel()
-	b := test.OtherModel{
-		OpenName: "kkk",
-	}
-
-	fmt.Println(b)
-	fmt.Println(a)
-	name := a.GetName()
-	openName := a.OpenName
-	// a.name = "hjo"
-	fmt.Println(name)
-	fmt.Println("openname", openName)
-	fmt.Println(&a)
-	a.SetName("afterchange")
-	fmt.Println("----------afterOtherModel", a)
-	a.OpenName = "afterOpennameだよ"
-	fmt.Println("aftername", a.GetName())
-	fmt.Println(a.OpenName)
-
 	flag.Parse()
 	if len(flag.Args()) == 0 {
 		fmt.Println("引数を指定してください.")
 		return
 	}
-	// rawData := flag.Args()[]
 	var tiles []*Tile
 	var err error
 	tiles, err = NewTiles(flag.Args()[0])
@@ -188,20 +174,8 @@ func main() {
 		return
 	}
 
-	tileType, err := tiles[0].getType()
+	tileType := tiles[0].tileType
 
 	fmt.Println(tileType)
 	fmt.Println("tileType")
-	fmt.Println(tiles[0].name)
-	tiles[0].name = "newname"
-
-	fmt.Println(tiles[0].name)
-	fmt.Println(reflect.TypeOf(tiles[0]))
-
-	// fmt.Println(tiles)
-	// struct Hai {
-	// 	number: int
-	// }
-
-	// test()
 }
