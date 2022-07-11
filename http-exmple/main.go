@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"html"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -29,20 +30,17 @@ type helloJSON struct {
 }
 
 func main() {
-	// exampleにあるけどこれだと動かない serverHttpを用意しないといけない
-	// customHandler := func(w http.ResponseWriter, _ *http.Request) {
-	// 	io.WriteString(w, "Hello from a HandleFunc #1!\n")
-	// }
-
+	// Handleでcustom handlerを登録する場合
 	customHandler, _ := newCustomHandler()
-
 	http.Handle("/foo", customHandler)
+
+	// handler関数を直接指定する場合
 	http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r)
 		body := r.Body
 		defer body.Close()
 
-		buf := new(bytes.Buffer)
+		buf := &bytes.Buffer{}
 		io.Copy(buf, body)
 
 		var hello helloJSON
@@ -53,7 +51,6 @@ func main() {
 
 		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
 	})
-	fmt.Println("listening on :8080")
-	http.ListenAndServe(":8080", nil)
-	// log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("listening on :18080")
+	log.Fatal(http.ListenAndServe("127.0.0.1:18080", nil))
 }
