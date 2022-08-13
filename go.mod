@@ -3,12 +3,12 @@ module example/hello
 go 1.17
 
 require (
+	github.com/aws/aws-sdk-go v1.44.73
 	github.com/gin-gonic/gin v1.7.7
 	rsc.io/quote v1.5.2
 )
 
 require (
-	github.com/aws/aws-sdk-go v1.44.73 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
