@@ -4,6 +4,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"io"
 )
 
 type Adapter struct {
@@ -23,11 +24,17 @@ func NewAdapter() (*Adapter, error) {
 	}, nil
 }
 
-func (s *Adapter) Upload(body []byte) error {
+func (s *Adapter) Upload(body io.ReadSeeker) error {
 	i := &s3.PutObjectInput{
 		Bucket: aws.String("test"),
-		Key:    aws.String("hoge.zip"),
+		Key:    aws.String("test/fugaa.zip"),
 		Body:   body,
+	}
+
+	_, err := s.s3.PutObject(i)
+
+	if err != nil {
+		return err
 	}
 	return nil
 }
