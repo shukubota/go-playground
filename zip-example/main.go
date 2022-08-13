@@ -88,4 +88,9 @@ func main() {
 	// １回閉じてから開く
 	//file, err := os.Open(zf.Name())
 	s.Upload(content)
+
+	save, err := os.Create("save.zip")
+	save.Write(b.Bytes())
+	save.Close()
+
 }
