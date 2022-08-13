@@ -12,7 +12,7 @@ type Adapter struct {
 
 func NewAdapter() (*Adapter, error) {
 	sess, err := session.NewSession(&aws.Config{
-		Region:   aws.String("ap-northeast-1"),
+		Region:   aws.String("us-east-1"),
 		Endpoint: aws.String("http://localhost:4566"),
 	})
 	if err != nil {
@@ -23,6 +23,11 @@ func NewAdapter() (*Adapter, error) {
 	}, nil
 }
 
-func (s *Adapter) Upload(queueName string, message string) error {
+func (s *Adapter) Upload(body []byte) error {
+	i := &s3.PutObjectInput{
+		Bucket: aws.String("test"),
+		Key:    aws.String("hoge.zip"),
+		Body:   body,
+	}
 	return nil
 }
