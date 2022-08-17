@@ -11,7 +11,6 @@ service Greeter {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
 }
 
-
 message HelloRequest {
   string name = 1;
 }
