@@ -31,6 +31,10 @@ func (s *myServer) SayHello(ctx context.Context, req *hellopb.HelloRequest) (*he
 	}, nil
 }
 
+func NewMyServer() *myServer {
+	return &myServer{}
+}
+
 func main() {
 	fmt.Println("grpc-example")
 	port := 50051
@@ -41,7 +45,7 @@ func main() {
 
 	s := grpc.NewServer()
 
-	hellopb.RegisterGreeterServer(s, [])
+	hellopb.RegisterGreeterServer(s, NewMyServer())
 	go func() {
 		log.Printf("start gRPC server port: %v", port)
 		s.Serve(listner)
