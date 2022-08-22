@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
 	"os"
@@ -38,7 +39,7 @@ func NewMyServer() *myServer {
 func main() {
 	fmt.Println("grpc-example")
 	port := 50051
-	listner, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	listner, err := net.Listen("tcp", "127.0.0.1:50051")
 	if err != nil {
 		panic(err)
 	}
@@ -46,6 +47,8 @@ func main() {
 	s := grpc.NewServer()
 
 	hellopb.RegisterGreeterServer(s, NewMyServer())
+	reflection.Register(s)
+
 	go func() {
 		log.Printf("start gRPC server port: %v", port)
 		s.Serve(listner)
