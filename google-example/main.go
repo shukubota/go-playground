@@ -28,6 +28,7 @@ func main() {
 			Title: "title",
 			Body:  "body",
 		},
+		// tokenダミー
 		Token: "fZoxKPf6R3Ce-jNWV3LM6f:APA91bFEb0n9Rpb97EBgOqYWGZSYBTiGXtcBxXXunJ-BopCagCejGzFyCQsHPlUWUm1-au-ZSieP52f-wYmd1psgguiUNLS8YH-fIQcHqo_fFFaRzRfe6ROcQVugmPyEjI-EZ85Xsjzf",
 		//Android: &messaging.AndroidConfig{
 		//	Priority: "high",
