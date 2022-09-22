@@ -29,9 +29,12 @@ serverless create -u https://github.com/serverless/serverless-golang/ -p serverl
 
 2. Compile function
 
-```
+```shell
 cd serverless-template
 GOOS=linux go build -o bin/main
+
+# scraping用
+GOOS=linux go build -o bin/searchContent ./searchContent
 ```
 
 3. Deploy!
