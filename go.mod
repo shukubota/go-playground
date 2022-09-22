@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	firebase.google.com/go v3.13.0+incompatible
+	github.com/aws/aws-lambda-go v1.34.1
 	github.com/aws/aws-sdk-go v1.44.73
 	github.com/gin-gonic/gin v1.7.7
 	google.golang.org/api v0.95.0
@@ -29,7 +30,6 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.1.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.5.1 // indirect
-	github.com/googleapis/go-type-adapters v1.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
