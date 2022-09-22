@@ -7,13 +7,19 @@ require (
 	github.com/aws/aws-lambda-go v1.34.1
 	github.com/aws/aws-sdk-go v1.44.73
 	github.com/gin-gonic/gin v1.7.7
+	github.com/stretchr/testify v1.7.2
 	google.golang.org/api v0.95.0
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
 	rsc.io/quote v1.5.2
 )
 
-require cloud.google.com/go/storage v1.26.0 // indirect
+require (
+	cloud.google.com/go/storage v1.26.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
+)
 
 require (
 	cloud.google.com/go v0.104.0 // indirect
