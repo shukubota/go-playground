@@ -24,13 +24,13 @@ This repository contains template for creating serverless services written in Go
 1. Create a new service based on this template
 
 ```
-serverless create -u https://github.com/serverless/serverless-golang/ -p myservice
+serverless create -u https://github.com/serverless/serverless-golang/ -p serverless-template
 ```
 
 2. Compile function
 
 ```
-cd myservice
+cd serverless-template
 GOOS=linux go build -o bin/main
 ```
 
