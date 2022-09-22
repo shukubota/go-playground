@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	hellopb "example/hello/grpc-example/protobuf"
 	"flag"
 	"fmt"
+	hellopb "github.com/shukubota/go-api-template/grpc-example/protobuf"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"

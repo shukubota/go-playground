@@ -4,8 +4,8 @@ import (
 	"archive/zip"
 	"bytes"
 	"encoding/base64"
-	"example/hello/zip-example/adaptor"
 	"fmt"
+	"github.com/shukubota/go-api-template/zip-example/adaptor"
 	"os"
 	"strings"
 )

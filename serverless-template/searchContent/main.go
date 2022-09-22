@@ -1,8 +1,8 @@
 package main
 
 import (
-	"example/hello/serverless-template/searchContent/handler"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/shukubota/go-api-template/serverless-template/searchContent/handler"
 )
 
 func main() {

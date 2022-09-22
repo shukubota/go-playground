@@ -1,4 +1,4 @@
-module example/hello
+module github.com/shukubota/go-api-template
 
 go 1.17
 

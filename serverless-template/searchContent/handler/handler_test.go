@@ -1,7 +1,7 @@
 package handler_test
 
 import (
-	"example/hello/serverless-template/searchContent/handler"
+	"github.com/shukubota/go-api-template/serverless-template/searchContent/handler"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
