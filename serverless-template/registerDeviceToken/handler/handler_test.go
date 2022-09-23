@@ -17,7 +17,7 @@ func Test_Register_Device_Token_Handler(t *testing.T) {
 		expectedError error
 	}{
 		{
-			requestBody: "{\"fcm_device_token\": \"hoge\"}",
+			requestBody: "{\"fcm_device_token\": \"hoge\", \"apns_device_token\": \"fuga\"}",
 			expected: events.APIGatewayProxyResponse{
 				StatusCode: 200,
 				Body:       "OK",
