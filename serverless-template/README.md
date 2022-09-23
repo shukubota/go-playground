@@ -35,10 +35,13 @@ GOOS=linux go build -o bin/main
 
 # scraping用
 GOOS=linux go build -o bin/searchContent ./searchContent
+
+# deviceToken用
+GOOS=linux go build -o bin/registerDeviceToken ./registerDeviceToken
 ```
 
 3. Deploy!
 
 ```
-serverless deploy
+serverless deploy --region ap-northeast-1
 ```
