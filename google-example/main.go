@@ -29,7 +29,7 @@ func main() {
 			Body:  "body",
 		},
 		// tokenダミー
-		Token: "cCC7Hyz5h0SsqOmwgShcpf:APA91bF9RwxTjJRB4VaaxXS0bnGznunSrpKoBpdMjMCsj_nOwXtnriu6dFmRW-9KKCWXKy5MZ9FVe5ZAKPWOTXibJyO3Bf4pyGlVKTkWvcjMzvSqa5Z3uRd-mgApIdKx0SXZ-OxSVmxC",
+		Token: "fsGS3vDzRJynZYK22h0rQt:APA91bFipz2cTbQYxRoEM6tt38-iW_2yxxlWaU7HhEDMkxZHR6i7RYLN_n_23BbWR0OrJ8H-8jzIQSqBs3ebFn6xx9ThqmT-IM41gD2t8G9-JK7cUzBPH60b099JwCKSHQZcFxO-1Lg5",
 		//Android: &messaging.AndroidConfig{
 		//	Priority: "high",
 		//	Notification: &messaging.AndroidNotification{
