@@ -4,17 +4,26 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"github.com/aws/aws-lambda-go/events"
 	"io"
 	"log"
 	"net/http"
 )
 
-type Result struct {
-	Name string              `json:"name""`
-	Rate map[int]int         `json:"rate""`
-	List []map[string]string `json:"list"'`
+type APIResult struct {
+	Request struct {
+		Parameters map[string]string `json:"parameters"`
+	} `json:"request"`
+	Result struct {
+		Items []Item `json:"items"`
+	}
+}
+
+type Item struct {
+	Title        string `json:"title"`
+	URL          string `json:"URL"`
+	AffiliateURL string `json:"affiliateURL"`
+	Date         string `json:"date"`
 }
 
 //{
@@ -47,10 +56,16 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		return events.APIGatewayProxyResponse{}, err
 	}
 
-	req, err := http.NewRequest("GET", "https://nodocchi.moe/api/listuser.php", nil)
+	req, err := http.NewRequest("GET", "https://api.dmm.com/affiliate/v3/ItemList", nil)
 
 	params := req.URL.Query()
-	params.Add("name", "ハゲ村の会長")
+	params.Add("api_id", "qrs7udKgm3hNXa4c9AAC")
+	params.Add("affiliate_id", "eloquent-990")
+	params.Add("site", "FANZA")
+	params.Add("service", "digital")
+	params.Add("sort", "date")
+	params.Add("output", "json")
+
 	req.URL.RawQuery = params.Encode()
 
 	fmt.Println(req.URL.String())
@@ -61,21 +76,13 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	body, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
 
-	var b Result
+	var b APIResult
 	json.Unmarshal(body, &b)
 
-	fmt.Println(b)
+	fmt.Println(b.Result.Items[0])
 	fmt.Println("status")
 	fmt.Println(res)
-	fmt.Println(err)
-
-	doc, err := goquery.NewDocumentFromReader(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("===========doc")
-	fmt.Println(doc)
+	//fmt.Println(err)
 
 	return events.APIGatewayProxyResponse{}, nil
 }
