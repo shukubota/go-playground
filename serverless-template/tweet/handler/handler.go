@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/ChimeraCoder/anaconda"
+	//"github.com/ChimeraCoder/anaconda"
 	"github.com/aws/aws-lambda-go/events"
-	"io"
+	"github.com/shukubota/go-api-template/serverless-template/tweet/anaconda"
 	"log"
 	"net/http"
 	"net/url"
@@ -44,15 +44,20 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	fmt.Println(api)
 	fmt.Println(text)
 
+	// 小さいサイズ
 	im, err := http.Get("https://sample.mgstage.com/sample/manmanland/476mla/075/476mla-075_20220308T135029.mp4")
+	//im, err := http.Get("https://sample.mgstage.com/sample/hametaverse/598hmt/010/598hmt-010_20220916T184301.mp4")
 	//im, err := http.Get("https://cc3001.dmm.co.jp/litevideo/freepv/h/hoi/hoisw00018/hoisw00018_dmb_w.mp4")
 	fmt.Println(im)
+
+	filePath := "/Users/shukubota/Desktop/media/short.mp4"
 
 	if err != nil {
 		return events.APIGatewayProxyResponse{}, err
 	}
 
-	bytes, err := io.ReadAll(im.Body)
+	//bytes, err := io.ReadAll(im.Body)
+	bytes, err := os.ReadFile(filePath)
 	defer im.Body.Close()
 	totalBytes := len(bytes)
 	media, err := api.UploadVideoInit(totalBytes, "video/mp4")
@@ -75,7 +80,9 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 			mediaData = base64.StdEncoding.EncodeToString(bytes[i:])
 		}
 		if err = api.UploadVideoAppend(media.MediaIDString, segment, mediaData); err != nil {
-			break
+			fmt.Println("=========err")
+			fmt.Printf("%v\n", err)
+			return events.APIGatewayProxyResponse{}, err
 		}
 		segment += 1
 	}
@@ -97,8 +104,12 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	//	chunkIndex++
 	//}
 
+	fmt.Println("============before UploadVideoFinalize")
+
 	videoMedia, err := api.UploadVideoFinalize(media.MediaIDString)
 	if err != nil {
+		fmt.Println("=========err UploadVideoFinalize")
+		fmt.Printf("%v\n", err)
 		return events.APIGatewayProxyResponse{}, err
 	}
 	var ids string
