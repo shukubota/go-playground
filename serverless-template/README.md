@@ -38,6 +38,9 @@ GOOS=linux go build -o bin/searchContent ./searchContent
 
 # deviceToken用
 GOOS=linux go build -o bin/registerDeviceToken ./registerDeviceToken
+
+# line用
+GOOS=linux go build -o bin/line ./line
 ```
 
 3. Deploy!
