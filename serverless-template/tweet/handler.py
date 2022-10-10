@@ -259,6 +259,21 @@ class VideoTweet(object):
 
         req = requests.post(url=POST_TWEET_URL, data=request_data, auth=oauth)
         print(req.json())
+        print(req.json()['id'])
+
+        reply_data = {
+            'status': '作品はこちら！',
+            'in_reply_to_status_id': req.json()['id']
+        }
+        requests.post(url=POST_TWEET_URL, data=reply_data, auth=oauth)
+
+def handler():
+    video_tweet = VideoTweet(VIDEO_FILENAME)
+    video_tweet.upload_init()
+    video_tweet.upload_append()
+    video_tweet.upload_finalize()
+    video_tweet.tweet()
+
 
 # API経由で動画をアップロード
 if __name__ == '__main__':
@@ -267,3 +282,4 @@ if __name__ == '__main__':
     videoTweet.upload_append()
     videoTweet.upload_finalize()
     videoTweet.tweet()
+
