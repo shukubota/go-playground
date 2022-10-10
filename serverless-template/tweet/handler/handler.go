@@ -105,7 +105,8 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	//}
 
 	fmt.Println("============before UploadVideoFinalize")
-
+	//time.Sleep(time.Second * 3)
+	fmt.Println("============before UploadVideoFinalize")
 	videoMedia, err := api.UploadVideoFinalize(media.MediaIDString)
 	if err != nil {
 		fmt.Println("=========err UploadVideoFinalize")
