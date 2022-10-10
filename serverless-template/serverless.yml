@@ -55,6 +55,9 @@ functions:
   hello:
     handler: bin/main
 
+  line:
+    handler: bin/line
+
   searchContents:
     handler: bin/searchContent
 
