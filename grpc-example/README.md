@@ -6,8 +6,7 @@ grpcurl -plaintext localhost:50051 list
 でmethod一覧取得。
 
 ```sh
-grpcurl -plaintext -d '{"name": "test"}' localhost:50051 hello.Greeter.SayHel
-lo
+grpcurl -plaintext -d '{"name": "test"}' localhost:50051 hello.Greeter.SayHello
 ```
 
 ## 準備
@@ -22,3 +21,9 @@ protoファイルをコンパイルする
 ```shell
 make protoc
 ```
+
+## curl
+```shell
+grpcurl -plaintext -d '{"name": "hoge"}' localhost:50051 hello.Greeter.SayHello
+```
+で正常に帰ってくる
