@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	hellopb "github.com/shukubota/go-api-template/grpc-example/protobuf"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"io"
 	"log"
 	"net"
 	"os"
@@ -17,19 +19,27 @@ var (
 	port = flag.Int("port", 50051, "the server port")
 )
 
-type GreeterServer interface {
-	SayHello(context.Context, *hellopb.HelloRequest) (*hellopb.HelloReply, error)
-	mustEmbedUnimplementedGreeterServer()
-}
-
 type myServer struct {
 	hellopb.UnimplementedGreeterServer
 }
 
 func (s *myServer) SayHello(ctx context.Context, req *hellopb.HelloRequest) (*hellopb.HelloReply, error) {
+	fmt.Println("sayhello")
 	return &hellopb.HelloReply{
 		Message: fmt.Sprintf("hello, %s!", req.GetName()),
 	}, nil
+}
+
+// bistream用
+func (s *myServer) SayHelloBiStream(stream hellopb.Greeter_SayHelloBiStreamServer) error {
+	for {
+		req, err := stream.Recv()
+		fmt.Println(req)
+		fmt.Println(err)
+		if errors.Is(err, io.EOF) {
+			return nil
+		}
+	}
 }
 
 func NewMyServer() *myServer {
