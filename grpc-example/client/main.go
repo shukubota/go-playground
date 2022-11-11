@@ -11,8 +11,6 @@ import (
 
 func main() {
 	fmt.Println("start grpc client")
-
-	//scanner := bufio.NewScanner(os.Stdin)
 	address := "127.0.0.1:50051"
 
 	conn, err := grpc.Dial(
@@ -26,13 +24,20 @@ func main() {
 	}
 	defer conn.Close()
 
-	fmt.Println(conn)
-	fmt.Println("----------connection")
+	err = requestUnary(conn)
+	if err != nil {
+		log.Fatalf("%v\n", err)
+	}
+}
 
+func requestUnary(conn *grpc.ClientConn) error {
 	client := hellopb.NewGreeterClient(conn)
 	req := &hellopb.HelloRequest{Name: "hoge"}
 
 	res, err := client.SayHello(context.Background(), req)
+	if err != nil {
+		return err
+	}
 	fmt.Println(res.Message)
-	fmt.Println(res.Message == "hello, hoge!")
+	return nil
 }
