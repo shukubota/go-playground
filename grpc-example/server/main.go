@@ -13,6 +13,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"time"
 )
 
 var (
@@ -30,7 +31,7 @@ func (s *myServer) SayHello(ctx context.Context, req *hellopb.HelloRequest) (*he
 	}, nil
 }
 
-// bistream用
+// bidirection stream用
 func (s *myServer) SayHelloBiStream(stream hellopb.Greeter_SayHelloBiStreamServer) error {
 	for {
 		req, err := stream.Recv()
@@ -40,6 +41,25 @@ func (s *myServer) SayHelloBiStream(stream hellopb.Greeter_SayHelloBiStreamServe
 			return nil
 		}
 	}
+}
+
+func (s *myServer) SayHelloServerStream(req *hellopb.HelloRequest, stream hellopb.Greeter_SayHelloServerStreamServer) error {
+	//resCount := 5
+	//for i := 0; i < resCount; i++ {
+	i := 0
+	for {
+		i = i + 1
+		if err := stream.Send(&hellopb.HelloReply{
+			Message: fmt.Sprintf("[%d] Hello, %s!", i, req.GetName()),
+		}); err != nil {
+			return err
+		}
+		if i > 3 {
+			break
+		}
+		time.Sleep(time.Second * 1)
+	}
+	return nil
 }
 
 func NewMyServer() *myServer {
