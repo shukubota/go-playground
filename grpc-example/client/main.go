@@ -9,12 +9,14 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"io"
 	"log"
+	"time"
 )
 
 func main() {
 	fmt.Println("start grpc client")
 	address := "127.0.0.1:50051"
 
+	// unary 用のconnection
 	conn, err := grpc.Dial(
 		address,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -26,8 +28,27 @@ func main() {
 	}
 	defer conn.Close()
 
+	// stream用
+	ctx := context.Background()
+	client := hellopb.NewGreeterClient(conn)
+	stream, err := client.SayHelloBiDirectionalStream(ctx)
+
+	//if err := stream.CloseSend()
+
+	fmt.Println(stream)
+	fmt.Println("========stream")
+
+	if err != nil {
+		log.Fatalf("%v\n", err)
+	}
+
+	// unary
 	//err = requestUnary(conn)
-	err = requestServerStream(conn)
+	// server stream
+	//err = requestServerStream(conn)
+
+	// bidirectional stream
+	err = requestBiDirectionalStreaming(stream)
 
 	if err != nil {
 		log.Fatalf("%v\n", err)
@@ -72,6 +93,26 @@ func requestServerStream(conn *grpc.ClientConn) error {
 			fmt.Println(err)
 		}
 		fmt.Println(res)
+	}
+	return nil
+}
+
+func requestBiDirectionalStreaming(stream hellopb.Greeter_SayHelloBiDirectionalStreamClient) error {
+	fmt.Println("requestBiDirectionalStreaming")
+	for i := 0; i < 3; i++ {
+		err := stream.Send(&hellopb.HelloRequest{
+			Name: fmt.Sprintf("%v\n", i),
+		})
+		time.Sleep(time.Second * 1)
+		fmt.Println(err)
+		if err != nil {
+			break
+		}
+	}
+	err := stream.CloseSend()
+	fmt.Println(err)
+	if err != nil {
+		return nil
 	}
 	return nil
 }

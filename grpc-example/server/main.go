@@ -32,13 +32,18 @@ func (s *myServer) SayHello(ctx context.Context, req *hellopb.HelloRequest) (*he
 }
 
 // bidirection stream用
-func (s *myServer) SayHelloBiStream(stream hellopb.Greeter_SayHelloBiStreamServer) error {
+func (s *myServer) SayHelloBiDirectionalStream(stream hellopb.Greeter_SayHelloBiDirectionalStreamServer) error {
+	fmt.Println(stream)
 	for {
 		req, err := stream.Recv()
 		fmt.Println(req)
-		fmt.Println(err)
-		if errors.Is(err, io.EOF) {
-			return nil
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				fmt.Println("EOF")
+				return nil
+			}
+			fmt.Println(err)
+			return err
 		}
 	}
 }
