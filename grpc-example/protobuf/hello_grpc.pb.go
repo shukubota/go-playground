@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GreeterClient interface {
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
-	SayHelloBiStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloBiStreamClient, error)
+	SayHelloBiDirectionalStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloBiDirectionalStreamClient, error)
 	SayHelloServerStream(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (Greeter_SayHelloServerStreamClient, error)
 }
 
@@ -44,30 +44,30 @@ func (c *greeterClient) SayHello(ctx context.Context, in *HelloRequest, opts ...
 	return out, nil
 }
 
-func (c *greeterClient) SayHelloBiStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloBiStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Greeter_ServiceDesc.Streams[0], "/hello.Greeter/SayHelloBiStream", opts...)
+func (c *greeterClient) SayHelloBiDirectionalStream(ctx context.Context, opts ...grpc.CallOption) (Greeter_SayHelloBiDirectionalStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Greeter_ServiceDesc.Streams[0], "/hello.Greeter/SayHelloBiDirectionalStream", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &greeterSayHelloBiStreamClient{stream}
+	x := &greeterSayHelloBiDirectionalStreamClient{stream}
 	return x, nil
 }
 
-type Greeter_SayHelloBiStreamClient interface {
+type Greeter_SayHelloBiDirectionalStreamClient interface {
 	Send(*HelloRequest) error
 	Recv() (*HelloReply, error)
 	grpc.ClientStream
 }
 
-type greeterSayHelloBiStreamClient struct {
+type greeterSayHelloBiDirectionalStreamClient struct {
 	grpc.ClientStream
 }
 
-func (x *greeterSayHelloBiStreamClient) Send(m *HelloRequest) error {
+func (x *greeterSayHelloBiDirectionalStreamClient) Send(m *HelloRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *greeterSayHelloBiStreamClient) Recv() (*HelloReply, error) {
+func (x *greeterSayHelloBiDirectionalStreamClient) Recv() (*HelloReply, error) {
 	m := new(HelloReply)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ func (x *greeterSayHelloServerStreamClient) Recv() (*HelloReply, error) {
 // for forward compatibility
 type GreeterServer interface {
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
-	SayHelloBiStream(Greeter_SayHelloBiStreamServer) error
+	SayHelloBiDirectionalStream(Greeter_SayHelloBiDirectionalStreamServer) error
 	SayHelloServerStream(*HelloRequest, Greeter_SayHelloServerStreamServer) error
 	mustEmbedUnimplementedGreeterServer()
 }
@@ -124,8 +124,8 @@ type UnimplementedGreeterServer struct {
 func (UnimplementedGreeterServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
 }
-func (UnimplementedGreeterServer) SayHelloBiStream(Greeter_SayHelloBiStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method SayHelloBiStream not implemented")
+func (UnimplementedGreeterServer) SayHelloBiDirectionalStream(Greeter_SayHelloBiDirectionalStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method SayHelloBiDirectionalStream not implemented")
 }
 func (UnimplementedGreeterServer) SayHelloServerStream(*HelloRequest, Greeter_SayHelloServerStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method SayHelloServerStream not implemented")
@@ -161,25 +161,25 @@ func _Greeter_SayHello_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Greeter_SayHelloBiStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(GreeterServer).SayHelloBiStream(&greeterSayHelloBiStreamServer{stream})
+func _Greeter_SayHelloBiDirectionalStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GreeterServer).SayHelloBiDirectionalStream(&greeterSayHelloBiDirectionalStreamServer{stream})
 }
 
-type Greeter_SayHelloBiStreamServer interface {
+type Greeter_SayHelloBiDirectionalStreamServer interface {
 	Send(*HelloReply) error
 	Recv() (*HelloRequest, error)
 	grpc.ServerStream
 }
 
-type greeterSayHelloBiStreamServer struct {
+type greeterSayHelloBiDirectionalStreamServer struct {
 	grpc.ServerStream
 }
 
-func (x *greeterSayHelloBiStreamServer) Send(m *HelloReply) error {
+func (x *greeterSayHelloBiDirectionalStreamServer) Send(m *HelloReply) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *greeterSayHelloBiStreamServer) Recv() (*HelloRequest, error) {
+func (x *greeterSayHelloBiDirectionalStreamServer) Recv() (*HelloRequest, error) {
 	m := new(HelloRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -222,8 +222,8 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "SayHelloBiStream",
-			Handler:       _Greeter_SayHelloBiStream_Handler,
+			StreamName:    "SayHelloBiDirectionalStream",
+			Handler:       _Greeter_SayHelloBiDirectionalStream_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
