@@ -43,7 +43,17 @@ func (s *myServer) SayHelloBiDirectionalStream(stream hellopb.Greeter_SayHelloBi
 				return nil
 			}
 			fmt.Println(err)
+			//time.Sleep(time.Second * 3)
 			return err
+		}
+
+		time.Sleep(time.Second * 2)
+		err = stream.Send(&hellopb.HelloReply{
+			Message: fmt.Sprintf("%v resだよ", req.Name),
+		})
+		if err != nil {
+			fmt.Println("stream send error")
+			fmt.Println(err)
 		}
 	}
 }

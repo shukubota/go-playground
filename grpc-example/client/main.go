@@ -33,8 +33,6 @@ func main() {
 	client := hellopb.NewGreeterClient(conn)
 	stream, err := client.SayHelloBiDirectionalStream(ctx)
 
-	//if err := stream.CloseSend()
-
 	fmt.Println(stream)
 	fmt.Println("========stream")
 
@@ -48,7 +46,16 @@ func main() {
 	//err = requestServerStream(conn)
 
 	// bidirectional stream
-	err = requestBiDirectionalStreaming(stream)
+	streamRequestErrorChannel := make(chan error)
+	streamReceiveErrorChannel := make(chan error)
+	//err = requestBiDirectionalStreaming(stream)
+	go requestBiDirectionalStreaming(streamRequestErrorChannel, stream)
+	go receiveBiDirectionStreaming(streamReceiveErrorChannel, stream)
+
+	err = <-streamRequestErrorChannel
+	receiveError := <-streamReceiveErrorChannel
+	fmt.Println(fmt.Sprintf("error %v", err))
+	fmt.Println(fmt.Sprintf("reveiveError: %v", receiveError))
 
 	if err != nil {
 		log.Fatalf("%v\n", err)
@@ -97,7 +104,8 @@ func requestServerStream(conn *grpc.ClientConn) error {
 	return nil
 }
 
-func requestBiDirectionalStreaming(stream hellopb.Greeter_SayHelloBiDirectionalStreamClient) error {
+func requestBiDirectionalStreaming(channel chan<- error, stream hellopb.Greeter_SayHelloBiDirectionalStreamClient) {
+	defer close(channel)
 	fmt.Println("requestBiDirectionalStreaming")
 	for i := 0; i < 3; i++ {
 		err := stream.Send(&hellopb.HelloRequest{
@@ -110,9 +118,29 @@ func requestBiDirectionalStreaming(stream hellopb.Greeter_SayHelloBiDirectionalS
 		}
 	}
 	err := stream.CloseSend()
+	fmt.Println("----closeSend")
 	fmt.Println(err)
 	if err != nil {
-		return nil
+		channel <- err
+		//return err
 	}
-	return nil
+	//return nil
+	channel <- nil
+	return
+}
+
+func receiveBiDirectionStreaming(channel chan<- error, stream hellopb.Greeter_SayHelloBiDirectionalStreamClient) {
+	defer close(channel)
+	fmt.Println("receiveBiDirectionStreaming")
+	for {
+		res, err := stream.Recv()
+		fmt.Println(fmt.Sprintf("receive result: %v", res))
+		fmt.Println(fmt.Sprintf("error %v", err))
+		if err != nil {
+			channel <- err
+			break
+		}
+	}
+	channel <- nil
+	return
 }
