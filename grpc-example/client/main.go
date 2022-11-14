@@ -117,6 +117,7 @@ func requestBiDirectionalStreaming(channel chan<- error, stream hellopb.Greeter_
 			break
 		}
 	}
+	// ここでcloseしないとlistenし続ける
 	err := stream.CloseSend()
 	fmt.Println("----closeSend")
 	fmt.Println(err)
