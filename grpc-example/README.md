@@ -27,3 +27,8 @@ make protoc
 grpcurl -plaintext -d '{"name": "hoge"}' localhost:50051 hello.Greeter.SayHello
 ```
 で正常に帰ってくる
+
+## grpc-web
+```shell
+docker-compose exec app make protoc-js
+```
