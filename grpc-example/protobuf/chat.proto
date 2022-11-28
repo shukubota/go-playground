@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "shukubota/go-api-template/grpc-example";
+package chat;
+
+service Chat {
+  rpc Connect (ChatConnectRequest) returns (stream ChatConnectResponse);
+  rpc SendData (ChatSendDataRequest) returns (ChatSendDataResponse);
+//  rpc SayHelloBiDirectionalStream (stream HelloRequest) returns (stream HelloReply);
+//  rpc SayHelloServerStream (HelloRequest) returns (stream HelloReply);
+}
+
+message ChatConnectRequest {
+  string token = 1;
+}
+
+message ChatConnectResponse {
+  string status = 1;
+}
+
+message ChatSendDataRequest {
+  string data = 1;
+  string from = 2;
+}
+
+message ChatSendDataResponse {
+  string status = 1;
+}
