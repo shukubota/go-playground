@@ -15,12 +15,18 @@ message ChatConnectRequest {
 }
 
 message ChatConnectResponse {
-  string status = 1;
+  string from = 1;
+  DotData data = 2;
 }
 
 message ChatSendDataRequest {
-  string data = 1;
+  DotData data = 1;
   string from = 2;
+}
+
+message DotData {
+  uint64 x = 1;
+  uint64 y = 2;
 }
 
 message ChatSendDataResponse {

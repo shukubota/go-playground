@@ -21,8 +21,13 @@ export namespace ChatConnectRequest {
 }
 
 export class ChatConnectResponse extends jspb.Message {
-  getStatus(): string;
-  setStatus(value: string): ChatConnectResponse;
+  getFrom(): string;
+  setFrom(value: string): ChatConnectResponse;
+
+  getData(): DotData | undefined;
+  setData(value?: DotData): ChatConnectResponse;
+  hasData(): boolean;
+  clearData(): ChatConnectResponse;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ChatConnectResponse.AsObject;
@@ -34,13 +39,16 @@ export class ChatConnectResponse extends jspb.Message {
 
 export namespace ChatConnectResponse {
   export type AsObject = {
-    status: string,
+    from: string,
+    data?: DotData.AsObject,
   }
 }
 
 export class ChatSendDataRequest extends jspb.Message {
-  getData(): string;
-  setData(value: string): ChatSendDataRequest;
+  getData(): DotData | undefined;
+  setData(value?: DotData): ChatSendDataRequest;
+  hasData(): boolean;
+  clearData(): ChatSendDataRequest;
 
   getFrom(): string;
   setFrom(value: string): ChatSendDataRequest;
@@ -55,8 +63,30 @@ export class ChatSendDataRequest extends jspb.Message {
 
 export namespace ChatSendDataRequest {
   export type AsObject = {
-    data: string,
+    data?: DotData.AsObject,
     from: string,
+  }
+}
+
+export class DotData extends jspb.Message {
+  getX(): number;
+  setX(value: number): DotData;
+
+  getY(): number;
+  setY(value: number): DotData;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DotData.AsObject;
+  static toObject(includeInstance: boolean, msg: DotData): DotData.AsObject;
+  static serializeBinaryToWriter(message: DotData, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DotData;
+  static deserializeBinaryFromReader(message: DotData, reader: jspb.BinaryReader): DotData;
+}
+
+export namespace DotData {
+  export type AsObject = {
+    x: number,
+    y: number,
   }
 }
 
