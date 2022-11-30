@@ -1,14 +1,17 @@
-package chat_server
+package service
 
 import (
 	"context"
 	"fmt"
 	pb "github.com/shukubota/go-api-template/grpc-example/protobuf/server/protobuf"
+	"github.com/shukubota/go-api-template/grpc-example/server/infrastructure"
+	ri "github.com/shukubota/go-api-template/grpc-example/server/interfaces"
 	"time"
 )
 
 type chatServer struct {
 	pb.UnimplementedChatServer
+	cr ri.ConnectionRepository
 	// userId, streamのmap
 	clientIdList map[string]pb.Chat_ConnectServer
 	data         []*message
@@ -16,72 +19,87 @@ type chatServer struct {
 
 type message struct {
 	from string
-	body string
+	x    uint64
+	y    uint64
 }
 
-func NewChatServer() *chatServer {
+func NewChatServer() (*chatServer, error) {
+	cr, err := infrastructure.NewConnectionRepository()
+	if err != nil {
+		return nil, err
+	}
 	return &chatServer{
+		cr:           cr,
 		clientIdList: make(map[string]pb.Chat_ConnectServer),
 		data:         make([]*message, 0),
-	}
+	}, nil
 }
+
+// 接続stream ここでデータ変更を検知してclientに送信
 
 func (cs *chatServer) Connect(req *pb.ChatConnectRequest, server pb.Chat_ConnectServer) error {
 	fmt.Println("----------connect")
 	fmt.Println(req)
 	fmt.Println(server)
-	if cs.clientIdList[req.GetToken()] == nil {
-		cs.clientIdList[req.GetToken()] = server
-	}
-	fmt.Println(cs.clientIdList)
-	//count := len(cs.data)
+	cs.clientIdList[req.GetToken()] = server
+	count := len(cs.data)
+	// connectionをdynamoへ
+	cs.cr.Put(&ri.Connection{
+		ID: req.GetToken(),
+	})
+
+	res, err := cs.cr.Get(req.GetToken())
+	fmt.Println(err)
+	fmt.Println(res)
+	fmt.Println("=======================err")
+
+	// ここはgoroutine出して良さげ
 	for {
 		// tokenがなければ終了
 		if cs.clientIdList[req.GetToken()] == nil {
 			return nil
 		}
-		fmt.Println(len(cs.data))
-		//if count < len(cs.data) {
-		//	for i := count; i < len(cs.data); i++ {
-		//		target := cs.data[i]
-		//		err := server.Send(&pb.ChatConnectResponse{
-		//			Status: fmt.Sprintf("%v %v", target.body, target.from),
-		//		})
-		//		fmt.Println(err)
-		//		if err != nil {
-		//			fmt.Println(err)
-		//			return err
-		//		}
-		//		count++
-		//	}
-		//}
-		time.Sleep(time.Second * 3)
+		//fmt.Println(len(cs.data))
+		if count < len(cs.data) {
+			for i := count; i < len(cs.data); i++ {
+				target := cs.data[i]
+				for un, stream := range cs.clientIdList {
+					// 送り主には送らない
+					if un == target.from {
+						//continue
+					}
+
+					err := stream.Send(&pb.ChatConnectResponse{
+						From: target.from,
+						Data: &pb.DotData{
+							X: target.x,
+							Y: target.y,
+						},
+					})
+					if err != nil {
+						fmt.Println(err)
+						return err
+					}
+				}
+				count++
+			}
+		}
+		time.Sleep(time.Millisecond * 200)
 	}
 	return nil
 }
 
+// clientから受け取る
+
 func (cs *chatServer) SendData(ctx context.Context, req *pb.ChatSendDataRequest) (*pb.ChatSendDataResponse, error) {
-	fmt.Println("==============aaaa")
-	fmt.Println(req)
+	data := req.GetData()
+	x := data.GetX()
+	y := data.GetY()
 	cs.data = append(cs.data, &message{
 		from: req.GetFrom(),
-		body: req.GetData(),
+		x:    x,
+		y:    y,
 	})
-	for key, stream := range cs.clientIdList {
-		fmt.Println(key)
-		fmt.Println(stream)
-		fmt.Println("============stream")
-		if stream == nil {
-			continue
-		}
-		err := stream.Send(&pb.ChatConnectResponse{
-			Status: fmt.Sprintf("from %v stream response", key),
-		})
-		if err != nil {
-			fmt.Println(err)
-			fmt.Println("send error in sendData")
-		}
-	}
 	return &pb.ChatSendDataResponse{
 		Status: "OK",
 	}, nil
