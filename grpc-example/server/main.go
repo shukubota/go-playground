@@ -5,14 +5,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	hellopb "github.com/shukubota/go-api-template/grpc-example/protobuf"
+	hellopb "github.com/shukubota/go-api-template/grpc-example/protobuf/server/protobuf"
+	service "github.com/shukubota/go-api-template/grpc-example/server/chat"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"io"
 	"log"
 	"net"
-	"os"
-	"os/signal"
 	"time"
 )
 
@@ -22,6 +21,7 @@ var (
 
 type myServer struct {
 	hellopb.UnimplementedGreeterServer
+	connectedClient any
 }
 
 func (s *myServer) SayHello(ctx context.Context, req *hellopb.HelloRequest) (*hellopb.HelloReply, error) {
@@ -58,9 +58,11 @@ func (s *myServer) SayHelloBiDirectionalStream(stream hellopb.Greeter_SayHelloBi
 	}
 }
 
+// server stream
 func (s *myServer) SayHelloServerStream(req *hellopb.HelloRequest, stream hellopb.Greeter_SayHelloServerStreamServer) error {
 	//resCount := 5
 	//for i := 0; i < resCount; i++ {
+	fmt.Println("request from client")
 	i := 0
 	for {
 		i = i + 1
@@ -82,26 +84,22 @@ func NewMyServer() *myServer {
 }
 
 func main() {
-	fmt.Println("grpc-example")
 	port := 50051
-	listner, err := net.Listen("tcp", "127.0.0.1:50051")
+	listener, err := net.Listen("tcp", "127.0.0.1:50051")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	s := grpc.NewServer()
 
 	hellopb.RegisterGreeterServer(s, NewMyServer())
+	cs, err := service.NewChatServer()
+	if err != nil {
+		log.Fatal(err)
+	}
+	hellopb.RegisterChatServer(s, cs)
 	reflection.Register(s)
 
-	go func() {
-		log.Printf("start gRPC server port: %v", port)
-		s.Serve(listner)
-	}()
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	log.Println("stopping gRPC server...")
-	s.GracefulStop()
+	log.Printf("start gRPC server port: %v", port)
+	s.Serve(listener)
 }
