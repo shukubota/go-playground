@@ -12,6 +12,7 @@ type adaptor struct {
 
 type PutData map[string]*dynamodb.AttributeValue
 type GetParams map[string]*dynamodb.AttributeValue
+type DeleteParams map[string]*dynamodb.AttributeValue
 type GetData *dynamodb.GetItemOutput
 
 func NewAdaptor() (*adaptor, error) {
@@ -43,13 +44,25 @@ func (d *adaptor) Put(table string, data PutData) error {
 }
 
 func (d *adaptor) Get(table string, p GetParams) (GetData, error) {
-	query := &dynamodb.GetItemInput{
+	input := &dynamodb.GetItemInput{
 		TableName: aws.String(table),
 		Key:       p,
 	}
-	res, err := d.client.GetItem(query)
+	res, err := d.client.GetItem(input)
 	if err != nil {
 		return nil, err
 	}
 	return res, nil
+}
+
+func (d *adaptor) Delete(table string, p DeleteParams) error {
+	input := &dynamodb.DeleteItemInput{
+		TableName: aws.String(table),
+		Key:       p,
+	}
+	_, err := d.client.DeleteItem(input)
+	if err != nil {
+		return err
+	}
+	return nil
 }
