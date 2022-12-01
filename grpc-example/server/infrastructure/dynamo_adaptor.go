@@ -14,8 +14,10 @@ type PutData map[string]*dynamodb.AttributeValue
 type GetParams map[string]*dynamodb.AttributeValue
 type DeleteParams map[string]*dynamodb.AttributeValue
 type GetData *dynamodb.GetItemOutput
+type QueryData *dynamodb.QueryOutput
+type ScanData *dynamodb.ScanOutput
 
-func NewAdaptor() (*adaptor, error) {
+func NewDynamoAdaptor() (*adaptor, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Region:   aws.String("ap-northeast-1"),
 		Endpoint: aws.String("http://localhost:4566"),
@@ -49,6 +51,28 @@ func (d *adaptor) Get(table string, p GetParams) (GetData, error) {
 		Key:       p,
 	}
 	res, err := d.client.GetItem(input)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (d *adaptor) Query(table string) (QueryData, error) {
+	input := &dynamodb.QueryInput{
+		TableName: aws.String(table),
+	}
+	res, err := d.client.Query(input)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (d *adaptor) Scan(table string) (ScanData, error) {
+	input := &dynamodb.ScanInput{
+		TableName: aws.String(table),
+	}
+	res, err := d.client.Scan(input)
 	if err != nil {
 		return nil, err
 	}

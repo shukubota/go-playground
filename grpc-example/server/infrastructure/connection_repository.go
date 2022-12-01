@@ -11,7 +11,7 @@ type connectionRepository struct {
 }
 
 func NewConnectionRepository() (ri.ConnectionRepository, error) {
-	a, err := NewAdaptor()
+	a, err := NewDynamoAdaptor()
 	if err != nil {
 		return nil, err
 	}

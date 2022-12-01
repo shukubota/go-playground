@@ -7,5 +7,5 @@ type Connection struct {
 type ConnectionRepository interface {
 	Put(*Connection) error
 	Get(ui string) (*Connection, error)
-	// delete
+	Delete(*Connection) error
 }
