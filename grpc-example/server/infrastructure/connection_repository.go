@@ -48,3 +48,17 @@ func (cr *connectionRepository) Put(c *ri.Connection) error {
 	}
 	return nil
 }
+
+func (cr *connectionRepository) Delete(c *ri.Connection) error {
+	fmt.Println(c)
+	input := DeleteParams{
+		"user": {
+			S: aws.String(c.ID),
+		},
+	}
+	err := cr.db.Delete("connections", input)
+	if err != nil {
+		return err
+	}
+	return nil
+}
