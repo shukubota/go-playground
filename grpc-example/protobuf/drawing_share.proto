@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+option go_package = "shukubota/go-api-template/grpc-example";
+package drawing_share;
+
+service DrawingShare {
+  rpc Connect (ConnectRequest) returns (stream ConnectResponse);
+  rpc SendDrawing (SendDrawingRequest) returns (SendDrawingResponse);
+  rpc DisConnect (DisConnectRequest) returns (DisConnectResponse);
+}
+
+message ConnectRequest {
+  string user = 1;
+}
+
+message ConnectResponse {
+  string from = 1;
+  DotData data = 2;
+}
+
+message DisConnectRequest {
+  string user = 1;
+}
+
+message DisConnectResponse {
+  string status = 1;
+}
+
+message SendDrawingRequest {
+  DotData data = 1;
+  string from = 2;
+}
+
+message DotData {
+  uint64 x = 1;
+  uint64 y = 2;
+}
+
+message SendDrawingResponse {
+  string status = 1;
+}
