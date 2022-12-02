@@ -8,3 +8,7 @@ RUN npm -g install protoc-gen-grpc-web
 RUN npm -g install protoc-gen-ts
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest \
     && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+COPY ./run.sh /var/work/
+COPY ./protobuf /var/work/protobuf
+WORKDIR /var/work/
+CMD ["bash", "run.sh"]
