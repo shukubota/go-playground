@@ -30,6 +30,10 @@ func (cr *connectionRepository) Get(ui string) (*ri.Connection, error) {
 	if err != nil {
 		return nil, err
 	}
+	u := r.Item["user"]
+	if u == nil {
+		return nil, nil
+	}
 	return &ri.Connection{
 		ID: *r.Item["user"].S,
 	}, nil
