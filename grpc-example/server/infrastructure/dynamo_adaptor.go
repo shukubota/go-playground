@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -51,6 +52,9 @@ func (d *adaptor) Get(table string, p GetParams) (GetData, error) {
 		Key:       p,
 	}
 	res, err := d.client.GetItem(input)
+	fmt.Println(res.Item)
+	fmt.Println(err)
+	fmt.Println("==============wwww")
 	if err != nil {
 		return nil, err
 	}
