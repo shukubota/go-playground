@@ -21,6 +21,7 @@ require (
 
 require (
 	cloud.google.com/go/storage v1.26.0 // indirect
+	github.com/algolia/algoliasearch-client-go/v3 v3.26.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
