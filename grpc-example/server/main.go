@@ -4,6 +4,7 @@ import (
 	pb "github.com/shukubota/go-api-template/grpc-example/protobuf/server/protobuf"
 	"github.com/shukubota/go-api-template/grpc-example/server/service"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
 )
@@ -24,8 +25,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	hs, err := service.NewGreeterServer()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	pb.RegisterDrawingShareServer(s, cs)
-	//reflection.Register(s)
+	pb.RegisterGreeterServer(s, hs)
+	reflection.Register(s)
 
 	log.Printf("start gRPC server port: %v", port)
 	s.Serve(listener)
