@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	pb "github.com/shukubota/go-api-template/grpc-example/protobuf/server/protobuf"
 	"log"
 	"sync"
@@ -13,6 +14,10 @@ type drawingSharingServer struct {
 	//mr ri.MessageRepository
 	// userId, streamのmap
 	sci *safeConnectionInfo
+}
+
+type greeterServer struct {
+	pb.UnimplementedGreeterServer
 }
 
 type safeConnectionInfo struct {
@@ -109,4 +114,24 @@ func (cs *drawingSharingServer) SendDrawing(ctx context.Context, req *pb.SendDra
 	return &pb.SendDrawingResponse{
 		Status: "OK",
 	}, nil
+}
+
+func NewGreeterServer() (*greeterServer, error) {
+	return &greeterServer{}, nil
+}
+
+func (hs *greeterServer) SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
+	fmt.Println(request.GetName())
+	fmt.Println("=======================")
+	return &pb.HelloReply{
+		Message: "hoge",
+	}, nil
+}
+
+func (hs *greeterServer) SayHelloBiDirectionalStream(server pb.Greeter_SayHelloBiDirectionalStreamServer) error {
+	return nil
+}
+
+func (hs *greeterServer) SayHelloServerStream(request *pb.HelloRequest, server pb.Greeter_SayHelloServerStreamServer) error {
+	return nil
 }
