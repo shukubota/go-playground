@@ -6,7 +6,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-func UnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+func AuthUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 	fmt.Println("=============unary interceptor")
+	fmt.Println(info)
 	return handler(ctx, req)
 }
