@@ -2,10 +2,19 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"strconv"
+	"time"
 )
 
 func main() {
+	fmt.Println(time.Now())
+
+	random := rand.Intn(3)
+	fmt.Println(random)
+
+	fmt.Println(split(9))
+
 	fmt.Println("==============func")
 	input := []MyInt{1, 2, 3, 4}
 	r := f1(input)
@@ -18,6 +27,13 @@ func main() {
 	s := New[string]()
 	s.Push("hello")
 	fmt.Println(s)
+}
+
+func split(sum int) (x, y int) {
+	xx := sum * 4 / 9
+	yy := sum - xx
+	fmt.Println(x)
+	return xx, yy
 }
 
 type Stack[T any] []T
