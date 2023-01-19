@@ -27,6 +27,7 @@ func main() {
 	s := New[string]()
 	s.Push("hello")
 	fmt.Println(s)
+	fmt.Printf("%d\n", 2)
 }
 
 func split(sum int) (x, y int) {
