@@ -8,6 +8,12 @@ import (
 )
 
 func main() {
+	text := "aaa"
+	fmt.Println(text)
+	textToBytes := []byte(text)
+	fmt.Println(textToBytes)
+	fmt.Println(string(textToBytes))
+
 	fmt.Println(time.Now())
 
 	random := rand.Intn(3)
