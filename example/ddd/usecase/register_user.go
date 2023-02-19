@@ -1,4 +1,4 @@
-package use_case
+package usecase
 
 import (
 	"github.com/shukubota/go-api-template/example/ddd/domain/entity"
