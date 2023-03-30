@@ -15,21 +15,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-go@v3
+    - uses: actions/setup-go@v4
       with:
         go-version: "1.20"
 
     - name: Set up Go
-      id: cache-go
+      id: cache-go2
       uses: actions/cache@v3
       with:
-        path: ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+        go-version-file: "go.mod"
+#      with:
+#        path: ~/go/pkg/mod
+#        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+#        restore-keys: |
+#          ${{ runner.os }}-go-
     - name: check cache
       shell: bash
-      run: echo ${{ steps.cache-go.outputs.cache-hit != 'true' }}
+      run: echo ${{ steps.cache-go2.outputs.cache-hit != 'true' }}
     - name: Download Go modules
       shell: bash
       if: ${{ steps.cache-go.outputs.cache-hit != 'true' }}
