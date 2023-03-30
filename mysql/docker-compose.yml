@@ -1,0 +1,12 @@
+version: "3"
+services:
+  db:
+    image: mysql:5.7
+    env_file:
+      - ./.env
+    platform: linux/x86_64
+    volumes:
+      - ./db/data:/var/lib/mysql
+    working_dir: /root/mysql-sandbox
+    ports:
+      - "13306:3306"
