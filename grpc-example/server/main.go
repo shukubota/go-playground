@@ -22,7 +22,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	interceptor := grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(interceptor.UnaryInterceptor))
+	interceptor := grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+		interceptor.AuthUnaryInterceptor,
+		interceptor.RecoverUnaryInterceptor,
+	))
 	s := grpc.NewServer(interceptor)
 
 	cs, err := service.NewDrawingSharingServer()

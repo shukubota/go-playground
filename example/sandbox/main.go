@@ -3,12 +3,22 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"reflect"
 	"strconv"
 	"time"
 )
 
+type Hoge struct {
+	text string
+}
+
 func main() {
 	text := "aaa"
+
+	h := Hoge{text: "ppp"}
+	f := reflect.ValueOf(&h)
+	fmt.Println(f.Elem())
+
 	fmt.Println(text)
 	textToBytes := []byte(text)
 	fmt.Println(textToBytes)
