@@ -27,7 +27,9 @@ jobs:
     - name: Download Go modules
       shell: bash
       if: ${{ steps.cache-go.outputs.cache-hit != 'true' }}
-      run: go mod download
+      run: |
+        echo ${{ steps.cache-go.outputs.cache-hit != 'true' }}
+        go mod download
 
 #    - name: Build
 #      run: go build -v ./...
