@@ -4,8 +4,12 @@ import (
 	"context"
 	"fmt"
 	pb "github.com/shukubota/go-api-template/grpc-example/protobuf/server/protobuf"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/keepalive"
 	"log"
 	"sync"
+	"time"
 )
 
 type drawingSharingServer struct {
@@ -123,6 +127,36 @@ func NewGreeterServer() (*greeterServer, error) {
 func (hs *greeterServer) SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
 	fmt.Println(request.GetName())
 	fmt.Println("=======================")
+	//return nil, errors.New("aaa")
+	address := "127.0.0.1:950051"
+
+	conn, err := grpc.Dial(
+		address,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithKeepaliveParams(keepalive.ClientParameters{
+			Time:                2 * time.Second, // 活動がなくなってから PING を送るまでの間隔
+			Timeout:             2 * time.Second, // PING 応答を待つ時間
+			PermitWithoutStream: true,            // アクティブなストリームがないときも probe を送るかどうか
+		}),
+	)
+	if err != nil {
+		log.Fatal("connection fail")
+		fmt.Println(err)
+		return nil, err
+	}
+	defer conn.Close()
+
+	client := pb.NewGreeterClient(conn)
+	r, err := client.SayHello(ctx, &pb.HelloRequest{
+		Name: "test",
+	})
+	if err != nil {
+		log.Printf("%+v\n", err)
+		return nil, err
+	}
+
+	fmt.Println(r)
+
 	return &pb.HelloReply{
 		Message: "hoge",
 	}, nil

@@ -16,3 +16,10 @@ $ go install golang.org/dl/go1.20@latest
 $ go1.20 download
 $ go1.20 version
 ```
+
+### db
+```shell
+cd mysql
+docker-compose up
+mysql -uroot -h 127.0.0.1 -P 13306 -proot_password
+```
