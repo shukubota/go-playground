@@ -21,7 +21,7 @@ jobs:
 
     - name: Set up Go
       id: cache-go2
-      uses: actions/cache@v3
+#      uses: actions/cache@v3
       with:
         go-version-file: "go.mod"
 #      with:
