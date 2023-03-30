@@ -24,11 +24,13 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
+    - name: check cache
+      shell: bash
+      run: echo ${{ steps.cache-go.outputs.cache-hit != 'true' }}
     - name: Download Go modules
       shell: bash
       if: ${{ steps.cache-go.outputs.cache-hit != 'true' }}
       run: |
-        echo ${{ steps.cache-go.outputs.cache-hit }}
         go mod download
 
 #    - name: Build
