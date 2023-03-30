@@ -36,10 +36,10 @@ jobs:
 #          ${{ runner.os }}-go-
     - name: check cache
       shell: bash
-      run: echo ${{ steps.cache-go2.outputs.cache-hit != 'true' }}
+      run: echo ${{ steps.setup-go.outputs.cache-hit != 'true' }}
     - name: Download Go modules
       shell: bash
-      if: ${{ steps.cache-go.outputs.cache-hit != 'true' }}
+      if: ${{ steps.setup-go.outputs.cache-hit != 'true' }}
       run: |
         go mod download
 
