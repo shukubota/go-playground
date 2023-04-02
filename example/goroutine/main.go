@@ -1,15 +1,42 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"golang.org/x/sync/errgroup"
 	"sync"
 	"time"
 )
 
 func main() {
 	fmt.Println("========aaa")
+	useErrorGroup()
 	//useWaitGroup()
-	useChannel()
+	//useChannel()
+}
+
+func useErrorGroup() {
+	fmt.Println("===========iii")
+	eg, ctx := errgroup.WithContext(context.TODO())
+
+	fmt.Println(ctx)
+
+	for i := 0; i < 10; i++ {
+		i := i
+		fmt.Println(i)
+		fmt.Println("======before eg.Go")
+		eg.Go(func() error {
+			fmt.Println(i)
+			if i == 2 || i == 3 {
+				return fmt.Errorf("error: hoge i: %d", i)
+			}
+			return nil
+		})
+	}
+
+	if err := eg.Wait(); err != nil {
+		fmt.Printf("error :%+v\n", err)
+	}
 }
 
 func useWaitGroup() {
