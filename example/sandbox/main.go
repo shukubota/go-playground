@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/shukubota/go-api-template/example/sandbox/other"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -13,6 +14,7 @@ type Hoge struct {
 }
 
 func main() {
+	others.Other()
 	text := "aaa"
 
 	h := Hoge{text: "ppp"}
