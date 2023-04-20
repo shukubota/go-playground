@@ -6,50 +6,35 @@ import (
 	"time"
 )
 
-func parentFunc(ctx context.Context) {
-	fmt.Println("start parentFunc")
-	for i := 1; i <= 10; i++ {
-		select {
-		case <-ctx.Done():
-			fmt.Println("parentFunc canceled")
-			return
-		default:
-			time.Sleep(1 * time.Second)
-		}
-	}
-	// cancelされると到達しない
-	fmt.Println("parentFunc finished")
-}
+const shortDuration = 3 * time.Second
 
-func childFunc(ctx context.Context) {
-	fmt.Println("start childFunc")
-	for i := 1; i <= 10; i++ {
-		select {
-		case <-ctx.Done():
-			fmt.Println("childFunc canceled")
-			return
-		default:
-			time.Sleep(1 * time.Second)
-		}
-	}
-	// parentのcancelはここにも伝搬するので到達しない
-	fmt.Println("childFunc finished")
+func process1(ctx context.Context) {
+	time.Sleep(2 * time.Second)
+
 }
 
 func main() {
-	fmt.Println("start main")
-	defer fmt.Println("done main")
-	ctx := context.Background()
+	ctx2 := context.TODO()
+	fmt.Println(ctx2.Value("aaa"))
+	ctx3 := context.WithValue(ctx2, "aaa", struct{ name string }{name: "aaa"})
 
-	parent, cancel := context.WithCancel(ctx)
-	go parentFunc(parent)
+	fmt.Println(ctx3.Value("aaa"))
 
-	child, _ := context.WithCancel(parent)
-	go childFunc(child)
+	//d := time.Now().Add(shortDuration)
+	//ctx, cancel := context.WithDeadline(context.Background(), d)
 
-	time.Sleep(1 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), shortDuration)
 
-	cancel()
+	// Even though ctx will be expired, it is good practice to call its
+	// cancellation function in any case. Failure to do so may keep the
+	// context and its parent alive longer than necessary.
+	defer cancel()
 
-	time.Sleep(3 * time.Second)
+	select {
+	case <-time.After(4 * time.Second):
+		fmt.Println("overslept")
+	case <-ctx.Done():
+		fmt.Println(context.Cause(ctx))
+	}
+
 }
