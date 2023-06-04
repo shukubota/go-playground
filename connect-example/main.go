@@ -5,6 +5,7 @@ import (
 	"connect-example/handler"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
+	"log"
 	"net/http"
 )
 
@@ -15,5 +16,7 @@ func main() {
 	path, handler := greetv1connect.NewGreetServiceHandler(greetHandler)
 
 	mux.Handle(path, handler)
-	http.ListenAndServe("localhost:18080", h2c.NewHandler(mux, &http2.Server{}))
+
+	log.Println("Starting server on port :18080")
+	log.Fatal(http.ListenAndServe("localhost:18080", h2c.NewHandler(mux, &http2.Server{})))
 }
