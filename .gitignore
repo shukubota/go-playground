@@ -3,3 +3,5 @@
 .envrc
 
 mysql/.env
+
+/connect-example/gen/
