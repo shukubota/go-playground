@@ -6,3 +6,13 @@ plugins:
   - plugin: connect-go
     out: gen
     opt: paths=source_relative
+  - plugin: buf.build/bufbuild/es
+    out: ./frontend/gen
+    # With target=ts, we generate TypeScript files.
+    # Use target=js+dts to generate JavaScript and TypeScript declaration files
+    # like remote generation does.
+    opt: target=ts
+  - plugin: buf.build/bufbuild/connect-es
+    out: ./frontend/gen
+    # With target=ts, we generate TypeScript files.
+    opt: target=ts
