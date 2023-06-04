@@ -16,3 +16,15 @@ reqponse↓
 ```shell
 {"greeting":"Hello Jane"}
 ```
+
+grpcurlの場合↓でいける
+```shell
+grpcurl \
+    -protoset <(buf build -o -) -plaintext \
+    -d '{"name": "Jane"}' \
+    localhost:18080 greet.v1.GreetService/Greet
+```
+
+```shell
+buf generate --template buf.gen.yaml (or buf.gen.js.yaml)
+```
