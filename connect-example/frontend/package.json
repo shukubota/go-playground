@@ -15,7 +15,8 @@
     "@bufbuild/connect-web": "^0.9.1",
     "@bufbuild/protobuf": "^1.2.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "swr": "^2.1.5"
   },
   "devDependencies": {
     "@bufbuild/buf": "^1.20.0-1",
