@@ -30,7 +30,11 @@ func main() {
 	fmt.Println(c)
 
 	h := c.Handler(h2c.NewHandler(mux, &http2.Server{}))
+	//h2 := h2c.NewHandler(mux, &http2.Server{})
 
-	log.Println("Starting server on port :18080")
-	log.Fatal(http.ListenAndServe("localhost:18080", h))
+	fmt.Println(h)
+
+	port := 18888
+	log.Printf("Starting server on port %d", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("localhost:%d", port), h))
 }
