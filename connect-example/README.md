@@ -10,7 +10,7 @@ $ go get github.com/bufbuild/connect-go/cmd/protoc-gen-connect-go@latest
 
 ## リクエスト
 ```shell
-curl -H "Content-Type: application/json" -d '{"name": "Jane"}' http://localhost:18080/greet.v1.GreetService/Greet
+curl -H "Content-Type: application/json" -H "Origin: localhost:5173" -d '{"name": "Jane"}' http://localhost:18888/greet.v1.GreetService/Greet
 ```
 reqponse↓
 ```shell
@@ -28,3 +28,11 @@ grpcurl \
 ```shell
 buf generate --template buf.gen.yaml (or buf.gen.js.yaml)
 ```
+
+## bufコンパイル
+```shell
+buf generate
+```
+でgo側のgenディレクトリ、frontend/genディレクトリにファイルが生成される
+
+## サーバ起動
