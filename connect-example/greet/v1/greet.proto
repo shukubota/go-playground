@@ -4,6 +4,8 @@ package greet.v1;
 
 option go_package = "connect-example/gen/greet/v1;greetv1";
 
+import "google/api/annotations.proto";
+
 message GreetRequest {
   string name = 1;
 }
@@ -12,6 +14,23 @@ message GreetResponse {
   string greeting = 1;
 }
 
-service GreetService {
-  rpc Greet(GreetRequest) returns (GreetResponse) {}
+message StringMessage {
+  string value = 1;
 }
+
+service GreetService {
+  rpc Greet(GreetRequest) returns (GreetResponse) {
+    option (google.api.http) = {
+      get: "/v1/greet"
+    };
+  }
+
+  rpc Echo(StringMessage) returns (StringMessage) {
+    option (google.api.http) = {
+      post: "/v1/example/echo"
+      body: "*"
+    };
+  }
+}
+
+
