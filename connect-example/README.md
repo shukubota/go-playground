@@ -36,3 +36,10 @@ buf generate
 でgo側のgenディレクトリ、frontend/genディレクトリにファイルが生成される
 
 ## サーバ起動
+
+
+## リクエスト
+### 素のgrpcに対するgrpcurl
+```shell
+grpcurl -plaintext -d '{"name": "hoge"}' localhost:29999 greet.v1.GreetService.Greet
+```
