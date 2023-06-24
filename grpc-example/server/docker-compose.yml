@@ -6,6 +6,7 @@ services:
     container_name: envoy-grpc-proxy
     ports:
       - "9000:9000"
+#      - "9090:9090"
 #  localstack:
 #    image: localstack/localstack:1.0.0
 #    ports:
