@@ -16,3 +16,10 @@ plugins:
     out: ./frontend/gen
     # With target=ts, we generate TypeScript files.
     opt: target=ts
+  - plugin: go-grpc
+    out: gen
+    opt: paths=source_relative
+  - plugin: grpc-gateway
+    out: gen
+    opt:
+      - paths=source_relative
