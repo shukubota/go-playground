@@ -31,6 +31,7 @@ function App() {
 
   const { data, error, isLoading } = useSWR("greet", () => {
     return client.greet({ name: "buf" });
+    // return client.greet({ name: "buf" });
   });
 
   console.log({ data, error, isLoading })
