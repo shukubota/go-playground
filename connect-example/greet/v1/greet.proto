@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package greet.v1;
+package example;
 
-option go_package = "connect-example/gen/greet/v1;greetv1";
+option go_package = "connect-example/gen/example";
 
 import "google/api/annotations.proto";
 
@@ -21,7 +21,7 @@ message StringMessage {
 service GreetService {
   rpc Greet(GreetRequest) returns (GreetResponse) {
     option (google.api.http) = {
-      get: "/v1/greet"
+      get: "/v1/greet/{name}"
     };
   }
 
