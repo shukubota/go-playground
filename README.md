@@ -1,4 +1,4 @@
-# go-api-template
+# go-playground
 
 ```sh
 docker-compose up
