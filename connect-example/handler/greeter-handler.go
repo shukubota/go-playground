@@ -1,7 +1,8 @@
 package handler
 
 import (
-	"connect-example/gen/greet/v1"
+	example "connect-example/gen/greet/v1"
+	"connect-example/gen/greet/v1/exampleconnect"
 	"context"
 	"github.com/bufbuild/connect-go"
 	"log"
@@ -9,19 +10,20 @@ import (
 
 type greetHandler struct{}
 
-type GreetHandlerIF interface {
-	Greet(ctx context.Context, req *connect.Request[greetv1.GreetRequest]) (*connect.Response[greetv1.GreetResponse], error)
-}
-
-func NewGreetHandler() GreetHandlerIF {
+func NewGreetHandler() exampleconnect.GreetServiceHandler {
 	return &greetHandler{}
 }
 
-func (s *greetHandler) Greet(ctx context.Context, req *connect.Request[greetv1.GreetRequest]) (*connect.Response[greetv1.GreetResponse], error) {
+func (s *greetHandler) Greet(ctx context.Context, req *connect.Request[example.GreetRequest]) (*connect.Response[example.GreetResponse], error) {
 	log.Println("RequestHeaders: ", req.Header())
 
-	res := connect.NewResponse(&greetv1.GreetResponse{
+	res := connect.NewResponse(&example.GreetResponse{
 		Greeting: "Hello " + req.Msg.Name,
 	})
 	return res, nil
+}
+
+func (s *greetHandler) Echo(ctx context.Context, c *connect.Request[example.StringMessage]) (*connect.Response[example.StringMessage], error) {
+	//TODO implement me
+	panic("implement me")
 }
