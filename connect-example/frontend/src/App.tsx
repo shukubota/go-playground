@@ -13,9 +13,20 @@ const transport = createConnectTransport({
 
 const client = createPromiseClient(GreetService as ServiceType, transport);
 
+const fetchData = async () => {
+  const response = await fetch('http://localhost:8085/example-messages');
+  response.json().then((data) => {
+    console.log(data);
+    return data;
+  }).catch((err) => {
+    console.log(err);
+  });
+}
+
 function App() {
-  const onSubmit = async () => {
-    console.log("onsubmit")
+  const onFeth = async () => {
+    const res = await fetchData();
+    console.log({ res })
   }
 
   const { data, error, isLoading } = useSWR("greet", () => {
@@ -31,7 +42,7 @@ function App() {
         {error && <p>error: {error.message}</p>}
         {data && <p>data: {data.greeting}</p>}
       </div>
-      <button onClick={onSubmit}>fetch data</button>
+      <button onClick={onFeth}>fetch data</button>
     </>
   )
 }
