@@ -36,7 +36,17 @@ buf generate
 でgo側のgenディレクトリ、frontend/genディレクトリにファイルが生成される
 
 ## サーバ起動
+```shell
+go run main.go
+```
+でconnect用のサーバがたつ
 
+```shell
+npm run dev
+```
+でフロントがたち、そこからlocalhost:18888へconnect-webのリクエストがくる
+
+fetch dataは別途grpc-playgroundのサーバを立てる必要がある
 
 ## リクエスト
 ### 素のgrpcに対するgrpcurl
