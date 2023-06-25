@@ -127,8 +127,12 @@ func NewGreeterServer() (*greeterServer, error) {
 func (hs *greeterServer) SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
 	fmt.Println(request.GetName())
 	fmt.Println("=======================")
+
+	return &pb.HelloReply{
+		Message: "hoge",
+	}, nil
 	//return nil, errors.New("aaa")
-	address := "127.0.0.1:950051"
+	address := "127.0.0.1:50051"
 
 	conn, err := grpc.Dial(
 		address,
