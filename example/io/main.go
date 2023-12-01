@@ -35,14 +35,21 @@ func main() {
 		r = sr
 	}
 
-	w, err := os.Create(*dest)
-	if err != nil {
-		fmt.Println(err)
-		return
+	var w io.Writer
+	if *out == "txt" {
+		stdout, err := os.Create(*dest)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		w = stdout
+	} else {
+		f := os.Stdout
+		defer f.Close()
+		w = f
 	}
-	defer w.Close()
 
-	err = toUpper(w, r)
+	err := toUpper(w, r)
 	if err != nil {
 		fmt.Println(err)
 		return
