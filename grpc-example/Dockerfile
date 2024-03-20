@@ -1,9 +1,12 @@
-FROM golang:1.19
+FROM golang:1.22
 
 RUN apt-get update
 RUN apt-get install sudo
 RUN apt-get install -y protobuf-compiler
-RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash - && sudo apt install -y nodejs
+RUN apt install -y nodejs npm
+RUN npm install n -g && n stable
+RUN apt purge -y nodejs npm && apt autoremove -y
+
 RUN npm -g install protoc-gen-grpc-web
 RUN npm -g install protoc-gen-ts
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest \

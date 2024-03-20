@@ -7,7 +7,7 @@ protoc:
 # macだとできないのでdocekrでやって
 protoc-js:
 	protoc \
-        --js_out=import_style=commonjs,binary:./protobuf/web \
+        --ts_out=import_style=commonjs,binary:./protobuf/web \
         --grpc-web_out=import_style=typescript,mode=grpcwebtext:./protobuf/web \
         protobuf/*.proto
 
