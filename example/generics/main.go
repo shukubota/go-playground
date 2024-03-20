@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/exp/constraints"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -64,8 +63,8 @@ func main() {
 	fmt.Println(hp)
 	fmt.Printf("%T\n", hp)
 
-	s := sum[int](1, 2, 3)
-	fmt.Println(s)
+	//s := sum[int](1, 2, 3)
+	//fmt.Println(s)
 
 	type customNumber int
 
@@ -80,12 +79,12 @@ func main() {
 
 	fmt.Println(hoge)
 
-	// mapのテスト
-	m := map[string]int{
-		"idx1": 1,
-		"idx2": 29,
-	}
-	fmt.Println(sumFromMap(m))
+	//// mapのテスト
+	//m := map[string]int{
+	//	"idx1": 1,
+	//	"idx2": 29,
+	//}
+	//fmt.Println(sumFromMap(m))
 
 	st := "some string"
 	i := 12
@@ -130,13 +129,13 @@ type pointer[T any] struct {
 	v unsafe.Pointer
 }
 
-func sum[T constraints.Integer](vs ...T) T {
-	var sum T
-	for _, v := range vs {
-		sum += v
-	}
-	return sum
-}
+//func sum[T constraints.Integer](vs ...T) T {
+//	var sum T
+//	for _, v := range vs {
+//		sum += v
+//	}
+//	return sum
+//}
 
 func sum2[T Number](vs ...T) T {
 	var sum T
@@ -150,13 +149,13 @@ type mapKey interface {
 	int | string | int64
 }
 
-func sumFromMap[T mapKey, U constraints.Integer](m map[T]U) U {
-	var s U
-	for _, v := range m {
-		s += v
-	}
-	return s
-}
+//func sumFromMap[T mapKey, U constraints.Integer](m map[T]U) U {
+//	var s U
+//	for _, v := range m {
+//		s += v
+//	}
+//	return s
+//}
 
 type Number interface {
 	int64 | float64
