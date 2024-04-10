@@ -4,5 +4,5 @@
 
 mysql/.env
 
-/connect-example/gen/
-/connect-example/frontend/gen/
+/connectexample/gen/
+/connectexample/frontend/gen/

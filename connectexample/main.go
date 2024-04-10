@@ -1,8 +1,8 @@
 package main
 
 import (
-	"connect-example/gen/greet/v1/exampleconnect"
-	"connect-example/handler"
+	"connectexample/gen/greet/v1/v1connect"
+	"connectexample/handler"
 	"context"
 	"fmt"
 	"github.com/rs/cors"
@@ -17,7 +17,7 @@ func main() {
 	greetHandler := handler.NewGreetHandler()
 
 	mux := http.NewServeMux()
-	path, handler := exampleconnect.NewGreetServiceHandler(greetHandler)
+	path, handler := v1connect.NewGreetServiceHandler(greetHandler)
 
 	mux.Handle(path, handler)
 

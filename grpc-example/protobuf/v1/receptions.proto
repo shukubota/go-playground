@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package proto.v1;
+
+import "protobuf/v1/reception.proto";
+
+option go_package = "proto/v1;v1";
+
+message ReceptionListRequest {
+  string date = 1;
+  int32 assign_to = 2;
+  string sort_appointment_time = 3;
+  string sort_reservation_time = 4;
+  int32 status = 5;
+  int32 page = 6;
+  int32 size = 7;
+}
+
+message ReceptionListResponse {
+  int32 total_page = 1;
+  int32 current_page = 2;
+  int32 size = 3;
+  repeated proto.v1.Reception receptions = 4;
+}
+
+service ReceptionService {
+  rpc ReceptionList(ReceptionListRequest) returns (ReceptionListResponse);
+}

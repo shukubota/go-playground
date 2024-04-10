@@ -1,9 +1,8 @@
 syntax = "proto3";
 
-package example;
+package connectexample.gen.greet.v1;
 
-option go_package = "connect-example/gen/example";
-
+option go_package = "connectexample/gen/greet/v1;v1";
 import "google/api/annotations.proto";
 
 message GreetRequest {

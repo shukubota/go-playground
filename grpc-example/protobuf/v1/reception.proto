@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package proto.v1;
+
+option go_package = "proto/v1;v1";
+
+message Patient {
+  int32 id = 1;
+  string full_name = 2;
+  string furigana_name = 3;
+  int32 gender = 4;
+  string birth_year = 5;
+  string clinical_number = 6;
+}
+
+message Examination {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Memo {
+  int64 id = 1;
+  string content = 2;
+}
+
+message Label {
+  int64 id = 1;
+  string name = 2;
+}
+
+message Doctor {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Reception {
+  int64 id = 1;
+  string appointment_time = 2;
+  string reception_time = 3;
+  int32 status = 4;
+  Patient patient = 5;
+  Examination examination = 6;
+  Doctor doctor = 7;
+  Memo memo = 8;
+  repeated Label labels = 9;
+}
