@@ -10,7 +10,7 @@ import (
 
 func main() {
 	fmt.Println("========aaa")
-	useErrorGroup()
+	//useErrorGroup()
 	//useWaitGroup()
 	//useChannel()
 }
