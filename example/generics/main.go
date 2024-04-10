@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 func main() {
 	inputInt := map[string]int64{
@@ -26,6 +29,15 @@ func main() {
 
 	sum := sumIntsOrFloats2[string, float64](inputFloat)
 	fmt.Println(sum)
+
+	var a animal
+
+	a = &dog{name: "dog"}
+
+	fmt.Println(a)
+
+	var n os.File
+
 }
 
 type Number interface {
