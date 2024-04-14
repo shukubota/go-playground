@@ -21,6 +21,12 @@ func main() {
 
 	mux.Handle(path, handler)
 
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusBadRequest)
+		//w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
+
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"http://127.0.0.1:5174"},
 		//AllowOriginFunc: func(origin string) bool {

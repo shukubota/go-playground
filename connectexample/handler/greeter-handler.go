@@ -31,3 +31,9 @@ func (s *greetHandler) Echo(ctx context.Context, req *connect.Request[v1.StringM
 	})
 	return res, nil
 }
+
+func (s *greetHandler) Health(ctx context.Context, req *connect.Request[v1.GreetRequest]) (string, error) {
+	log.Println("RequestHeaders: ", req.Header())
+
+	return "OK", nil
+}

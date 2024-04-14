@@ -1,6 +1,6 @@
 module connectexample
 
-go 1.22
+go 1.22.0
 
 require (
 	connectrpc.com/connect v1.15.0
