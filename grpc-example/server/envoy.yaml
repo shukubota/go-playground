@@ -24,8 +24,8 @@ static_resources:
 #                        allow_origin_string_match:
 #                          - prefix: "*"
                         allow_origin_string_match:
-                          - exact: "http://localhost:3005"
-#                        "localhost:3005"
+                          - exact: "http://localhost:3006"
+#                        "localhost:3006"
                         allow_methods: GET, PUT, DELETE, POST, OPTIONS
                         allow_headers: keep-alive,user-agent,cache-control,content-type,content-transfer-encoding,custom-header-1,x-accept-content-transfer-encoding,x-accept-response-streaming,x-user-agent,x-grpc-web,grpc-timeout
                 http_filters:
