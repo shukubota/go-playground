@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
-	pb "github.com/shukubota/go-api-template/grpc-example/protobuf/server/protobuf"
+	pb "github.com/shukubota/go-playground/grpc-example/protobuf/server/protobuf"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/keepalive"

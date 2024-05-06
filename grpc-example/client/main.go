@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	hellopb "github.com/shukubota/go-api-template/grpc-example/protobuf"
+	hellopb "github.com/shukubota/go-playground/grpc-example/protobuf/server/protobuf"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"io"
