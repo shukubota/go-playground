@@ -87,7 +87,6 @@ func requestServerStream(conn *grpc.ClientConn) error {
 	}
 
 	for {
-		fmt.Println("---------------999")
 		res, err := stream.Recv()
 		fmt.Println(res)
 		fmt.Println(err)
