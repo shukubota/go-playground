@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	HealthService_Check_FullMethodName = "/health.HealthService/Check"
+	HealthService_Check_FullMethodName       = "/health.HealthService/Check"
+	HealthService_CheckStream_FullMethodName = "/health.HealthService/CheckStream"
 )
 
 // HealthServiceClient is the client API for HealthService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type HealthServiceClient interface {
 	Check(ctx context.Context, in *CheckRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	CheckStream(ctx context.Context, in *CheckRequest, opts ...grpc.CallOption) (HealthService_CheckStreamClient, error)
 }
 
 type healthServiceClient struct {
@@ -47,11 +49,45 @@ func (c *healthServiceClient) Check(ctx context.Context, in *CheckRequest, opts 
 	return out, nil
 }
 
+func (c *healthServiceClient) CheckStream(ctx context.Context, in *CheckRequest, opts ...grpc.CallOption) (HealthService_CheckStreamClient, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &HealthService_ServiceDesc.Streams[0], HealthService_CheckStream_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &healthServiceCheckStreamClient{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type HealthService_CheckStreamClient interface {
+	Recv() (*CheckResponse, error)
+	grpc.ClientStream
+}
+
+type healthServiceCheckStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *healthServiceCheckStreamClient) Recv() (*CheckResponse, error) {
+	m := new(CheckResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // HealthServiceServer is the server API for HealthService service.
 // All implementations should embed UnimplementedHealthServiceServer
 // for forward compatibility
 type HealthServiceServer interface {
 	Check(context.Context, *CheckRequest) (*CheckResponse, error)
+	CheckStream(*CheckRequest, HealthService_CheckStreamServer) error
 }
 
 // UnimplementedHealthServiceServer should be embedded to have forward compatible implementations.
@@ -60,6 +96,9 @@ type UnimplementedHealthServiceServer struct {
 
 func (UnimplementedHealthServiceServer) Check(context.Context, *CheckRequest) (*CheckResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Check not implemented")
+}
+func (UnimplementedHealthServiceServer) CheckStream(*CheckRequest, HealthService_CheckStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method CheckStream not implemented")
 }
 
 // UnsafeHealthServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -91,6 +130,27 @@ func _HealthService_Check_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _HealthService_CheckStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(CheckRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(HealthServiceServer).CheckStream(m, &healthServiceCheckStreamServer{ServerStream: stream})
+}
+
+type HealthService_CheckStreamServer interface {
+	Send(*CheckResponse) error
+	grpc.ServerStream
+}
+
+type healthServiceCheckStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *healthServiceCheckStreamServer) Send(m *CheckResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // HealthService_ServiceDesc is the grpc.ServiceDesc for HealthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -103,6 +163,12 @@ var HealthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _HealthService_Check_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "CheckStream",
+			Handler:       _HealthService_CheckStream_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "health.proto",
 }

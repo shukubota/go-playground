@@ -5,6 +5,7 @@ option go_package = "github.com/shukubota/go-playground/streamexample;healthpb";
 
 service HealthService {
   rpc Check (CheckRequest) returns (CheckResponse);
+  rpc CheckStream (CheckRequest) returns (stream CheckResponse);
 }
 
 message CheckRequest {
