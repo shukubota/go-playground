@@ -1,0 +1,10 @@
+version: '3'
+services:
+  envoy:
+    build:
+      context: .
+    container_name: envoy-stream-example
+    ports:
+      - "9000:9000"
+
+
