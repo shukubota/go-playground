@@ -1,0 +1,16 @@
+syntax = "proto3";
+package health;
+
+option go_package = "github.com/shukubota/go-playground/streamexample;healthpb";
+
+service HealthService {
+  rpc Check (CheckRequest) returns (CheckResponse);
+}
+
+message CheckRequest {
+  string message = 1;
+}
+
+message CheckResponse {
+  string message = 1;
+}
