@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"github.com/pkg/errors"
 	"github.com/sashabaranov/go-openai"
 	healthpb "github.com/shukubota/go-playground/streamexample/gen/go"
 	"google.golang.org/grpc"
@@ -51,6 +51,8 @@ func (s *healthServer) Check(ctx context.Context, req *healthpb.CheckRequest) (*
 func (s *healthServer) CheckStream(request *healthpb.CheckRequest, server healthpb.HealthService_CheckStreamServer) error {
 	client := openai.NewClient(os.Getenv("OPEN_AI_API_KEY"))
 	ctx := context.Background()
+
+	// io.Reader満たしてない
 	stream, err := client.CreateChatCompletionStream(
 		ctx,
 		openai.ChatCompletionRequest{
@@ -73,12 +75,10 @@ func (s *healthServer) CheckStream(request *healthpb.CheckRequest, server health
 	for {
 		response, err := stream.Recv()
 		if errors.Is(err, io.EOF) {
-			fmt.Println("\nStream finished")
 			return nil
 		}
 
 		if err != nil {
-			fmt.Printf("\nStream error: %v\n", err)
 			return err
 		}
 
@@ -90,9 +90,66 @@ func (s *healthServer) CheckStream(request *healthpb.CheckRequest, server health
 		if err != nil {
 			return err
 		}
-
-		fmt.Printf(response.Choices[0].Delta.Content)
 	}
+
+	//// azure openai
+	//azureOpenAIKey := os.Getenv("AOAI_COMPLETIONS_API_KEY")
+	//modelDeploymentID := os.Getenv("AOAI_COMPLETIONS_MODEL")
+	//
+	//azureOpenAIEndpoint := os.Getenv("AOAI_COMPLETIONS_ENDPOINT")
+	//
+	//if azureOpenAIKey == "" || modelDeploymentID == "" || azureOpenAIEndpoint == "" {
+	//	fmt.Fprintf(os.Stderr, "Skipping example, environment variables missing\n")
+	//	return errors.New("environment variables missing")
+	//}
+	//
+	//keyCredential := azcore.NewKeyCredential(azureOpenAIKey)
+	//
+	//c, err := azopenai.NewClientWithKeyCredential(azureOpenAIEndpoint, keyCredential, nil)
+	//
+	//if err != nil {
+	//	// TODO: Update the following line with your application specific error handling logic
+	//	log.Printf("ERROR: %s", err)
+	//	return err
+	//}
+	//
+	//messages := []azopenai.ChatRequestMessageClassification{
+	//	&azopenai.ChatRequestUserMessage{Content: azopenai.NewChatRequestUserMessageContent("Can you help me?")},
+	//}
+	//
+	//resp, err := c.GetChatCompletionsStream(context.TODO(), azopenai.ChatCompletionsOptions{
+	//	//Prompt:         []string{"What is Azure OpenAI, in 20 words or less?"},
+	//	Messages:       messages,
+	//	MaxTokens:      to.Ptr(int32(2048)),
+	//	Temperature:    to.Ptr(float32(0.0)),
+	//	DeploymentName: &modelDeploymentID,
+	//}, nil)
+	//
+	//if err != nil {
+	//	log.Printf("ERROR: %s", err)
+	//	return err
+	//}
+	//
+	//defer resp.ChatCompletionsStream.Close()
+	//
+	//for {
+	//	entry, err := resp.ChatCompletionsStream.Read()
+	//
+	//	if errors.Is(err, io.EOF) {
+	//		fmt.Fprintf(os.Stderr, "\n*** No more completions ***\n")
+	//		break
+	//	}
+	//
+	//	if err != nil {
+	//		//  TODO: Update the following line with your application specific error handling logic
+	//		log.Printf("ERROR: %s", err)
+	//		return err
+	//	}
+	//
+	//	for _, choice := range entry.Choices {
+	//		fmt.Fprintf(os.Stderr, "Result: %+v\n", choice)
+	//	}
+	//}
 
 	return nil
 }
