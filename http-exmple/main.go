@@ -7,16 +7,45 @@ import (
 	"html"
 	"io"
 	"log"
+	"log/slog"
 	"net/http"
 )
 
 type CustomHandler struct {
 }
 
+type user struct {
+	UserName string `json:"user_name"`
+	ID       int    `json:"id"`
+}
+
+type customHandlerResponse struct {
+	Data   *user `json:"data"`
+	Status bool  `json:"status"`
+}
+
 func (h *CustomHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(w)
-	fmt.Println(r)
-	io.WriteString(w, "CustomHandler\n")
+	slog.Info("CustomHandler", "request")
+
+	u := &user{
+		UserName: "hoge",
+		ID:       1,
+	}
+
+	res := customHandlerResponse{
+		Data:   u,
+		Status: true,
+	}
+
+	b, err := json.Marshal(res)
+	if err != nil {
+		io.WriteString(w, "error\n")
+		return
+	}
+
+	io.WriteString(w, string(b))
+
+	//io.WriteString(w, "CustomHandler\n")
 }
 
 func newCustomHandler() (*CustomHandler, error) {
