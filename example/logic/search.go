@@ -32,6 +32,49 @@ type Grid struct {
 	wgrid int // 1,2 ... W
 }
 
+func (g *Grid) GetNextGrids(history []Grid) []Grid {
+	candidates := []Grid{
+		{
+			hgrid: g.hgrid,
+			wgrid: g.wgrid + 1,
+		},
+		{
+			hgrid: g.hgrid,
+			wgrid: g.wgrid - 1,
+		},
+		{
+			hgrid: g.hgrid + 1,
+			wgrid: g.wgrid,
+		},
+		{
+			hgrid: g.hgrid - 1,
+			wgrid: g.wgrid,
+		},
+	}
+
+	next := make([]Grid, 0)
+
+	for _, c := range candidates {
+		exists := false
+		for _, v := range history {
+			if v.hgrid == c.hgrid && v.wgrid == c.wgrid {
+				exists = true
+			}
+		}
+
+		if exists {
+			continue
+		}
+
+		if c.hgrid > H || c.hgrid < 1 || c.wgrid > W || c.wgrid < 1 {
+			continue
+		}
+
+		next = append(next, c)
+	}
+	return next
+}
+
 func run(sc *bufio.Scanner) error {
 
 	// toBoard
@@ -60,15 +103,46 @@ func run(sc *bufio.Scanner) error {
 	}
 
 	fmt.Println(board)
+
+	bs := getBlockers(board)
+
+	count := 0
+	for _, v := range bs {
+		// 盤面を変える
+		newBoard := board
+		newBoard[v.hgrid-1][v.wgrid-1] = true
+
+		if canReachGoal(newBoard) {
+			count++
+		}
+	}
+
+	fmt.Println(count)
+
 	return nil
 }
 
 // 盤面が与えられたときに(1,1)から(H, W)まで通れるかを判定する関数
-func canReachGoal(盤面 any) bool {
+func canReachGoal(board [][]bool) bool {
+	current := Grid{
+		hgrid: 1,
+		wgrid: 1,
+	}
+
+	history := make([]Grid, 0)
+
+	next := current.GetNextGrids(history)
+
+	for _, v := range next {
+		current = v
+		history = append(history)
+	}
+
 	return true
 }
 
 // 邪魔になって取り除く候補のgridのsliceを返す関数
-func getBlockers(盤面 any) []Grid {
+func getBlockers(board [][]bool) []Grid {
+	fmt.Println(board)
 	return []Grid{}
 }
