@@ -32,7 +32,7 @@ type Grid struct {
 	wgrid int // 1,2 ... W
 }
 
-func (g *Grid) GetNextGrids(history []Grid) []Grid {
+func (g *Grid) GetNextGrids(history []Grid, board [][]bool) ([]Grid, bool, []Grid) {
 	candidates := []Grid{
 		{
 			hgrid: g.hgrid,
@@ -53,6 +53,7 @@ func (g *Grid) GetNextGrids(history []Grid) []Grid {
 	}
 
 	next := make([]Grid, 0)
+	blockers := make([]Grid, 0)
 
 	for _, c := range candidates {
 		exists := false
@@ -66,13 +67,17 @@ func (g *Grid) GetNextGrids(history []Grid) []Grid {
 			continue
 		}
 
-		if c.hgrid > H || c.hgrid < 1 || c.wgrid > W || c.wgrid < 1 {
+		if c.hgrid > len(board) || c.hgrid < 1 || c.wgrid > len(board[0]) || c.wgrid < 1 {
 			continue
 		}
 
-		next = append(next, c)
+		if board[c.hgrid-1][c.wgrid-1] {
+			next = append(next, c)
+		} else {
+			blockers = append(blockers, c)
+		}
 	}
-	return next
+	return next, len(next) == 0, blockers
 }
 
 func run(sc *bufio.Scanner) error {
@@ -104,15 +109,26 @@ func run(sc *bufio.Scanner) error {
 
 	fmt.Println(board)
 
-	bs := getBlockers(board)
+	// bs := getBlockers(board)
 
 	count := 0
-	for _, v := range bs {
+
+	// 1回通れるかチェック
+	canReach, blockers := canReachGoal(board)
+
+	if canReach {
+		fmt.Println("can reach!")
+		return nil
+	}
+
+	for _, v := range blockers {
 		// 盤面を変える
 		newBoard := board
 		newBoard[v.hgrid-1][v.wgrid-1] = true
 
-		if canReachGoal(newBoard) {
+		canReach, _ := canReachGoal(newBoard)
+
+		if canReach {
 			count++
 		}
 	}
@@ -123,7 +139,7 @@ func run(sc *bufio.Scanner) error {
 }
 
 // 盤面が与えられたときに(1,1)から(H, W)まで通れるかを判定する関数
-func canReachGoal(board [][]bool) bool {
+func canReachGoal(board [][]bool) (bool, []Grid) {
 	current := Grid{
 		hgrid: 1,
 		wgrid: 1,
@@ -131,14 +147,28 @@ func canReachGoal(board [][]bool) bool {
 
 	history := make([]Grid, 0)
 
-	next := current.GetNextGrids(history)
+	allBlockers := make([]Grid, 0)
+
+	next, isTerminal, blockers := current.GetNextGrids(history, board)
+
+	// 終端なら到達できない
+	if isTerminal {
+		return true, blockers
+	}
 
 	for _, v := range next {
 		current = v
-		history = append(history)
+		history = append(history, v)
+
+		canReach, bs := canReachGoal(board)
+		allBlockers = append(allBlockers, bs...)
+
+		if canReach {
+			return true, bs
+		}
 	}
 
-	return true
+	return false, allBlockers
 }
 
 // 邪魔になって取り除く候補のgridのsliceを返す関数
