@@ -116,6 +116,9 @@ func run(sc *bufio.Scanner) error {
 	// 1回通れるかチェック
 	canReach, blockers := canReachGoal(board)
 
+	fmt.Println(canReach)
+	fmt.Println(blockers)
+
 	if canReach {
 		fmt.Println("can reach!")
 		return nil
