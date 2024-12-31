@@ -71,6 +71,10 @@ func (g *Grid) GetNextGrids(history []Grid, board [][]bool) ([]Grid, bool, []Gri
 			continue
 		}
 
+		fmt.Println(next)
+		fmt.Println(board)
+		fmt.Println(c)
+		fmt.Println("------------------")
 		if board[c.hgrid-1][c.wgrid-1] {
 			next = append(next, c)
 		} else {
@@ -113,8 +117,10 @@ func run(sc *bufio.Scanner) error {
 
 	count := 0
 
+	history := make([]Grid, 0)
+
 	// 1回通れるかチェック
-	canReach, blockers := canReachGoal(board)
+	canReach, blockers := canReachGoal(board, history)
 
 	fmt.Println(canReach)
 	fmt.Println(blockers)
@@ -129,7 +135,9 @@ func run(sc *bufio.Scanner) error {
 		newBoard := board
 		newBoard[v.hgrid-1][v.wgrid-1] = true
 
-		canReach, _ := canReachGoal(newBoard)
+		history := make([]Grid, 0)
+
+		canReach, _ := canReachGoal(newBoard, history)
 
 		if canReach {
 			count++
@@ -142,13 +150,13 @@ func run(sc *bufio.Scanner) error {
 }
 
 // 盤面が与えられたときに(1,1)から(H, W)まで通れるかを判定する関数
-func canReachGoal(board [][]bool) (bool, []Grid) {
+func canReachGoal(board [][]bool, history []Grid) (bool, []Grid) {
 	current := Grid{
 		hgrid: 1,
 		wgrid: 1,
 	}
 
-	history := make([]Grid, 0)
+	// history := make([]Grid, 0)
 
 	allBlockers := make([]Grid, 0)
 
@@ -163,7 +171,7 @@ func canReachGoal(board [][]bool) (bool, []Grid) {
 		current = v
 		history = append(history, v)
 
-		canReach, bs := canReachGoal(board)
+		canReach, bs := canReachGoal(board, history)
 		allBlockers = append(allBlockers, bs...)
 
 		if canReach {
