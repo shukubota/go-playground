@@ -71,10 +71,6 @@ func (g *Grid) GetNextGrids(history []Grid, board [][]bool) ([]Grid, bool, []Gri
 			continue
 		}
 
-		fmt.Println(next)
-		fmt.Println(board)
-		fmt.Println(c)
-		fmt.Println("------------------")
 		if board[c.hgrid-1][c.wgrid-1] {
 			next = append(next, c)
 		} else {
@@ -112,32 +108,78 @@ func run(sc *bufio.Scanner) error {
 	}
 
 	fmt.Println(board)
+	fmt.Println("initial board--------")
 
 	// bs := getBlockers(board)
 
 	count := 0
-
-	history := make([]Grid, 0)
+	current := Grid{
+		hgrid: 1,
+		wgrid: 1,
+	}
+	history := []Grid{
+		current,
+	}
 
 	// 1回通れるかチェック
-	canReach, blockers := canReachGoal(board, history)
+	canReach, blockers := canReachGoal(board, history, current)
 
 	fmt.Println(canReach)
 	fmt.Println(blockers)
+	fmt.Println("-------blockers")
 
 	if canReach {
 		fmt.Println("can reach!")
 		return nil
 	}
 
+	// blockersの重複を排除する
+	flattedBlockers := make([]Grid, 0)
 	for _, v := range blockers {
+		exists := false
+		for _, f := range flattedBlockers {
+			if f.hgrid == v.hgrid && f.wgrid == v.wgrid {
+				exists = true
+				break
+			}
+		}
+
+		if !exists {
+			flattedBlockers = append(flattedBlockers, v)
+		}
+	}
+
+	fmt.Println(flattedBlockers)
+	fmt.Println("=========flatted")
+
+	for _, v := range flattedBlockers {
 		// 盤面を変える
-		newBoard := board
-		newBoard[v.hgrid-1][v.wgrid-1] = true
+		newBoard := make([][]bool, len(board), len(board))
 
-		history := make([]Grid, 0)
+		for i := 0; i < len(board); i++ {
+			row := make([]bool, len(board[0]), len(board[0]))
+			for j := 0; j < len(board[0]); j++ {
+				if i == v.hgrid-1 && j == v.wgrid-1 {
+					row[j] = true
+					continue
+				}
+				row[j] = board[i][j]
+			}
+			newBoard[i] = row
+		}
 
-		canReach, _ := canReachGoal(newBoard, history)
+		current := Grid{
+			hgrid: 1,
+			wgrid: 1,
+		}
+		history := []Grid{
+			current,
+		}
+
+		fmt.Println(newBoard)
+		fmt.Println("=========newboard")
+
+		canReach, _ := canReachGoal(newBoard, history, current)
 
 		if canReach {
 			count++
@@ -150,28 +192,33 @@ func run(sc *bufio.Scanner) error {
 }
 
 // 盤面が与えられたときに(1,1)から(H, W)まで通れるかを判定する関数
-func canReachGoal(board [][]bool, history []Grid) (bool, []Grid) {
-	current := Grid{
-		hgrid: 1,
-		wgrid: 1,
-	}
-
-	// history := make([]Grid, 0)
+func canReachGoal(board [][]bool, history []Grid, current Grid) (bool, []Grid) {
+	// fmt.Println(current)
+	// fmt.Println("=======current")
 
 	allBlockers := make([]Grid, 0)
 
 	next, isTerminal, blockers := current.GetNextGrids(history, board)
 
+	// fmt.Println(isTerminal)
+	// fmt.Println(next)
+	// fmt.Println(blockers)
+	// fmt.Println("==========next")
+
 	// 終端なら到達できない
 	if isTerminal {
-		return true, blockers
+		return false, blockers
 	}
 
 	for _, v := range next {
 		current = v
 		history = append(history, v)
 
-		canReach, bs := canReachGoal(board, history)
+		if current.hgrid == len(board) && current.wgrid == len(board[0]) {
+			return true, allBlockers
+		}
+
+		canReach, bs := canReachGoal(board, history, current)
 		allBlockers = append(allBlockers, bs...)
 
 		if canReach {
