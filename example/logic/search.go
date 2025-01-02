@@ -124,12 +124,7 @@ func run(sc *bufio.Scanner) error {
 	// 1回通れるかチェック
 	canReach, blockers := canReachGoal(board, history, current)
 
-	fmt.Println(canReach)
-	fmt.Println(blockers)
-	fmt.Println("-------blockers")
-
 	if canReach {
-		fmt.Println("can reach!")
 		return nil
 	}
 
@@ -148,9 +143,6 @@ func run(sc *bufio.Scanner) error {
 			flattedBlockers = append(flattedBlockers, v)
 		}
 	}
-
-	fmt.Println(flattedBlockers)
-	fmt.Println("=========flatted")
 
 	for _, v := range flattedBlockers {
 		// 盤面を変える
@@ -176,9 +168,6 @@ func run(sc *bufio.Scanner) error {
 			current,
 		}
 
-		fmt.Println(newBoard)
-		fmt.Println("=========newboard")
-
 		canReach, _ := canReachGoal(newBoard, history, current)
 
 		if canReach {
@@ -193,17 +182,9 @@ func run(sc *bufio.Scanner) error {
 
 // 盤面が与えられたときに(1,1)から(H, W)まで通れるかを判定する関数
 func canReachGoal(board [][]bool, history []Grid, current Grid) (bool, []Grid) {
-	// fmt.Println(current)
-	// fmt.Println("=======current")
-
 	allBlockers := make([]Grid, 0)
 
 	next, isTerminal, blockers := current.GetNextGrids(history, board)
-
-	// fmt.Println(isTerminal)
-	// fmt.Println(next)
-	// fmt.Println(blockers)
-	// fmt.Println("==========next")
 
 	// 終端なら到達できない
 	if isTerminal {
@@ -231,6 +212,5 @@ func canReachGoal(board [][]bool, history []Grid, current Grid) (bool, []Grid) {
 
 // 邪魔になって取り除く候補のgridのsliceを返す関数
 func getBlockers(board [][]bool) []Grid {
-	fmt.Println(board)
 	return []Grid{}
 }
