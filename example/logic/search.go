@@ -11,10 +11,12 @@ import (
 
 func main() {
 	input := []string{
-		"3 3",
-		"...",
-		"..#",
-		"##.",
+		"2 2",
+		".#",
+		"#.",
+		// "...",
+		// "..#",
+		// "##.",
 	}
 
 	sc := bufio.NewScanner(strings.NewReader(strings.Join(input, "\n")))
@@ -108,9 +110,6 @@ func run(sc *bufio.Scanner) error {
 	}
 
 	fmt.Println(board)
-	fmt.Println("initial board--------")
-
-	// bs := getBlockers(board)
 
 	count := 0
 	current := Grid{
