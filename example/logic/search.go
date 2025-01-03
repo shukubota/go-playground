@@ -209,8 +209,3 @@ func canReachGoal(board [][]bool, history []Grid, current Grid) (bool, []Grid) {
 
 	return false, allBlockers
 }
-
-// 邪魔になって取り除く候補のgridのsliceを返す関数
-func getBlockers(board [][]bool) []Grid {
-	return []Grid{}
-}
