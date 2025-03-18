@@ -1,0 +1,123 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/health/v1/health.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "HealthService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/health": {
+      "post": {
+        "summary": "ヘルスチェック",
+        "operationId": "HealthService_CheckHealth",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckHealthResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CheckHealthRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HealthService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1CheckHealthRequest": {
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "$ref": "#/definitions/v1Parameters",
+          "title": "パラメータ"
+        }
+      },
+      "title": "リクエスト"
+    },
+    "v1CheckHealthResponse": {
+      "type": "object",
+      "properties": {
+        "memberId": {
+          "type": "string",
+          "title": "メンバーID"
+        }
+      },
+      "title": "レスポンス"
+    },
+    "v1Member": {
+      "type": "object",
+      "properties": {
+        "memberId": {
+          "type": "string",
+          "title": "メンバーID"
+        }
+      },
+      "title": "メンバー情報"
+    },
+    "v1Parameters": {
+      "type": "object",
+      "properties": {
+        "member": {
+          "$ref": "#/definitions/v1Member",
+          "title": "メンバー情報"
+        }
+      },
+      "title": "パラメータ"
+    }
+  }
+}

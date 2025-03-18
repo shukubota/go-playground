@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package api.health.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/shukubota/go-playground/grpc-gateway-example/api/health/v1;healthv1";
+
+// ヘルスチェック用サービス
+service HealthService {
+  // ヘルスチェック
+  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {
+    option (google.api.http) = {
+      post: "/v1/health"
+      body: "*"
+    };
+  }
+}
+
+// リクエスト
+message CheckHealthRequest {
+  // パラメータ
+  Parameters parameters = 1;
+}
+
+// パラメータ
+message Parameters {
+  // メンバー情報
+  Member member = 1;
+}
+
+// メンバー情報
+message Member {
+  // メンバーID
+  string member_id = 1;
+}
+
+// レスポンス
+message CheckHealthResponse {
+  // メンバーID
+  string member_id = 1;
+}
