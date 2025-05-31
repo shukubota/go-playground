@@ -6,3 +6,6 @@ mysql/.env
 
 /connectexample/gen/
 /connectexample/frontend/gen/
+
+node_modules
+.DS_Store
