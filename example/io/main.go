@@ -1,12 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
 	"os"
 )
+
+type hoge struct {
+	Name string `json:"name"`
+}
 
 func main() {
 	src := flag.String("src", "", "source file path")
@@ -53,6 +59,54 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 		return
+	}
+
+	file, err := os.CreateTemp("", "test")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer func() {
+		_ = file.Close()
+	}()
+
+	h := hoge{Name: "hoge"}
+	bs, err := json.Marshal(&h)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	_, err = file.Write(bs)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	_, err = file.Write(bs)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	_, err = file.Seek(0, 0)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	reader := bufio.NewReader(file)
+	//var b []byte
+	for {
+		b, err := reader.ReadBytes('\n')
+		if err != nil && err != io.EOF {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(string(b))
+		if err == io.EOF {
+			fmt.Println("----")
+			break
+		}
 	}
 }
 
