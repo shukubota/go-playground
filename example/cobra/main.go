@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"strconv"
 )
 
 var rootCmd *cobra.Command
@@ -30,5 +31,12 @@ func healthcheck(cmd *cobra.Command, arg []string) {
 
 	f := cmd.Flag("name")
 	fmt.Println("name", f.Value.String())
-	fmt.Println("arg", arg)
+
+	for _, v := range arg {
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(i)
+	}
 }
