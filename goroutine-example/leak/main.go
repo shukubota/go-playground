@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	doSomething(ctx, nil)
