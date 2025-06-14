@@ -21,11 +21,24 @@ func main() {
 func ReadAndWriteCSV() error {
 	iterator := readCSV()
 
+	var w io.Writer
+	// w = os.Stdout
+	f, err := os.Create("output.txt")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	w = f
+
 	for member, err := range iterator {
 		if err != nil {
 			return err
 		}
-		fmt.Println(member)
+		_, err = w.Write([]byte(member.ToLine()))
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -34,6 +47,10 @@ func ReadAndWriteCSV() error {
 type Member struct {
 	ID   string
 	Name string
+}
+
+func (m *Member) ToLine() string {
+	return fmt.Sprintf("%s,%s\n", m.ID, m.Name)
 }
 
 func readCSV() iter.Seq2[*Member, error] {
