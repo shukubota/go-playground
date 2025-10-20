@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/shukubota/go-api-template/example/ddd/handler"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/shukubota/go-playground/example/ddd/handler"
 )
 
 func main() {
